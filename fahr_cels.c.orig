@@ -1,7 +1,9 @@
 #include <stdio.h>
+<<<<<<< HEAD
 /*печать таблицы температур по Фаренгейту
  * и Цельсию для fahr = 0,20,...,300*/
-main(){
+main()
+{
 float fahr,celsius;
 int lower,upper,step;
 lower = 0; /*нижняя граница таблицы температур*/
@@ -14,20 +16,17 @@ while(fahr <= upper)
     printf("%3.0f\t%6.1f\n",fahr,celsius);
     fahr = fahr + step;
     }
-}
-
-
-/*##################################################*/
-#include <stdio.h>
+=======
 
 #define LOWER 0 /*нижняя граница таблицы*/
 #define UPPER 300 /*верхняя граница таблицы*/
 #define STEP 20 /*размер шага*/
 
 /*печать таблицы температур по Фаренгейту и Цельсию*/
-main()
+int main()
 {
     int fahr;
     for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
         printf("%3d\t%6.1f\n", fahr, (5.0/9.0)*(fahr-32));
+>>>>>>> b41c8316e4f2b4ade7ff4674f8b4298cf9beaa13
 }
