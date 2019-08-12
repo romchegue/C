@@ -165,19 +165,68 @@ int main(void)
 
 int main(void)
 {
-    int result;
-    result = EOF;
-    /*result = getchar();*/
-    printf("%d\n", result);
+    printf("%d\n", EOF);
 }
 
 
 /*##################################################*/
+#include <stdio.h>
+/*Подсчёт вводимых символов; 1-я версия*/
+int main()
+{
+    long nc;
+    nc = 0;
+    
+    while (getchar() != EOF)
+        ++nc;
+    printf("%ld\n", nc);
+}
 
 
+/*##################################################*/
+#include <stdio.h>
+/*Подсчёт вводимых символов; 2-я версия*/
+int main()
+{
+    double nc;
+    for (nc = 0; getchar() != EOF; ++nc)
+        ;
+    printf("%.0f\n", nc);
+}
 
 
+/*##################################################*/
+#include <stdio.h>
+/*Подсчёт строк входного потока*/
+int main()
+{
+    int c, nl;
+    nl = 0;
+    while ((c = getchar()) != EOF)
+        if (c == '\n')
+            ++nl;
+    printf("%d\n", nl);
+}
 
 
+/*##################################################*/
+#include <stdio.h>
+/*Упражнение 1.8. Напишите программу для подсчета пробелов, табуляций и новых строк.*/
+int main()
+{
+    int c, ns, nt, nl;
+    ns = nt = nl = 0;
+    while ((c = getchar()) != EOF)
+    {
+        if (c == ' ')
+            ++ns;
+        if (c == '\t')
+            ++nt;
+        if (c == '\n')
+            ++nl;
+    }
+    printf("Spaces:    %d\nTabs:      %d\nNew lines: %d\n", ns, nt, nl);
+}
 
 
+/*##################################################*/
