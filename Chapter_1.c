@@ -351,3 +351,131 @@ main()
 
 
 /*##################################################*/
+#include <stdio.h>
+/* подсчет цифр, символов-разделителей и прочих символов */
+main()
+{
+    int c, i, nwhite, nother;
+    int ndigit[10];
+    
+    nwhite = nother = 0;
+    for (i = 0; i < 10; ++i)
+        ndigit[i] = 0;
+    
+    while ((c = getchar()) != EOF)
+        if (c >= '0' && c <= '9')
+            ++ndigit[c - '0'];
+        else if (c == ' ' || c == '\n' || c == '\t')
+            ++nwhite;
+        else
+            ++nother;
+    
+    printf("digits =");
+    for (i = 0; i < 10; ++i)
+        printf(" %d", ndigit[i]);
+    printf(", delimiter-characters = %d, others = %d\n", nwhite, nother);
+}
+
+
+/*##################################################*/
+/*Упражнение 1.13. Напишите программу, печатающую гистограммы 
+длин вводимых слов. Гистограмму легко рисовать горизонтальными 
+полосами. Рисование вертикальными полосами - более трудная задача.*/
+#include <stdio.h>
+
+#define IN 1 /*внутри слова*/
+#define OUT 0 /*вне слова*/
+
+/*Печать длин вводимых слов.*/
+main()
+{
+    int c, state;
+    state = OUT;
+
+    while ((c = getchar()) != EOF)
+    {
+        if (c == ' ' || c == '\n' || c == '\t')
+        {
+            if (state == IN)
+                putchar('\n');
+            state = OUT;
+        }
+        else
+        {
+            if (state == OUT)
+                state = IN;
+            putchar('#');
+        }
+    }
+}
+
+
+/*##################################################*/
+/*Упражнение 1.14. Напишите программу, печатающую гистограммы 
+частот встречаемости вводимых символов.*/
+
+#include <stdio.h>
+/*Печать гистограммы частот встречаемости вводимых символов.*/
+
+main()
+{
+    int c, i, j, nwhite, nother;
+    int ndigit[10];
+
+    nwhite = nother = 0;
+    for (i = 0; i < 10; ++i)
+        ndigit[i] = 0;
+
+    while ((c = getchar()) != EOF)
+    {
+        if (c >= '0' && c <= '9')
+            ++ndigit[c - '0'];
+        else if (c == ' ' || c == '\n' || c == '\t')
+            ++nwhite;
+        else
+            ++nother;
+    }
+
+    printf("\nRESULTS:\n1. Digits.\n");
+    for (i = 0; i < 10; ++i)
+        {
+            printf("%d: ", i);
+            for (j = 0; j < ndigit[i]; ++j)
+                {
+                    if (j >= 50)
+                    {
+                        printf("... up to %d", ndigit[i]);
+                        break;
+                    }
+                    putchar('#');
+                }
+            printf("\n");
+        }
+
+    printf("2. Delimiters.\n");
+    for (j = 0; j < nwhite; ++j)
+        {
+            if (j >= 50) 
+            {
+                printf("... up to %d", nwhite);
+                break;
+            }
+            putchar('#');
+        }
+        
+        
+    printf("\n3. Others.\n");
+    for (j = 0; j < nother; ++j)
+        {
+            if (j >= 50) 
+            {
+                printf("... up to %d", nother);
+                break;
+            }
+            putchar('#');
+        }
+    putchar('\n');
+}
+
+
+/*##################################################*/
