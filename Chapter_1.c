@@ -163,9 +163,10 @@ int main(void)
 Для получения 0, необходимо нажать Ctrl+D в Linux-e
 или Ctrl+Z в Windows */
 
-int main(void)
+int main()
 {
     printf("%d\n", EOF);
+    return 0;
 }
 
 
@@ -475,6 +476,90 @@ main()
             putchar('#');
         }
     putchar('\n');
+}
+
+
+/*##################################################*/
+/*Упражнение 1.14. Напишите программу, печатающую гистограммы 
+частот встречаемости вводимых символов.*/
+
+#include <stdio.h>
+
+/* гистограмма частот встречаемости введенных символов
+   подсчитываются символы с ASCII-кодами от 0 до 256 */
+
+main()
+{
+    int c, i, j, symbols[256];
+    for (i = 0; i < 256; ++i)
+        symbols[i] = 0;
+
+    while ((c = getchar()) != EOF)
+        ++symbols[c];
+
+    for (i = 0; i < 256; i++)
+        if (symbols[i] > 0)
+        {
+            if (i >= 32)
+                printf("Symbol %c - ", i);
+            else
+                printf("Code %2d - ", i);
+            for (j = 0; j < symbols[i]; ++j)
+                putchar('#');
+            putchar('\n');
+        }
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+
+int power(int m, int n);
+
+/*Тест функции power*/
+int main()
+{
+    int i;
+    for (i = 0; i < 10; ++i)
+        printf("%d %d %d\n", i, power(2,i), power(-3,i));
+    return 0;
+}
+
+/*возводит base в n-ю степень, n >= 0*/
+int power(int base, int n)
+{
+    int i, p;
+
+    p = 1;
+    for (i = 1; i <= n; ++i)
+        p = p * base;
+    return p;
+}
+
+
+/*##################################################*/
+/*Упражнение 1.15. Перепишите программу преобразования 
+температур, выделив само преобразование в отдельную функцию.*/
+
+#include <stdio.h>
+
+#define LOWER 0 /*нижняя граница таблицы*/
+#define UPPER 300 /*верхняя граница таблицы*/
+#define STEP 20 /*размер шага*/
+
+/*печать таблицы температур по Фаренгейту и Цельсию*/
+int main()
+{
+    fahr_cels();
+    return 0;
+}
+
+int fahr_cels()
+{
+    int fahr;
+    for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP)
+        printf("%3d\t%6.1f\n", fahr, (5.0/9.0)*(fahr-32));
+    return 0;
 }
 
 
