@@ -564,3 +564,159 @@ int fahr_cels()
 
 
 /*##################################################*/
+#include <stdio.h>
+/*power: возводит base в n-ю степень; n >= 0, версия 2 */
+
+int power(int m, int n);
+
+/*Тест функции power*/
+int main()
+{
+    int i;
+    for (i = 0; i < 10; ++i)
+        printf("%d %d %d\n", i, power(2,i), power(-3,i));
+    return 0;
+}
+
+int power(int base, int n)
+{
+    int p;
+    for (p = 1; n > 0; --n)
+        p = p * base;
+    return p;
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+#define MAXLINE 1000 /*максимальный размер вводимой строки*/
+
+int getlines(char line[], int maxline);
+void copy(char to[], char from[]);
+
+/*печать самой длинной строки*/
+main()
+{
+    int len; /*длина текущей строки*/
+    int max; /*длина максимальной из просмотренных строк*/
+    char line[MAXLINE]; /*текущая строка*/
+    char longest[MAXLINE]; /*самая длинная строка*/
+    
+    max = 0;
+    while ((len = getlines(line, MAXLINE)) > 0)
+        if (len > max)
+        {
+            max = len;
+            copy(longest, line);
+        }
+    if (max > 0) /*была ли хоть одна строка?*/
+        printf("%s\n", longest);
+    return 0;
+}
+
+
+/*getlines: читает строку в s, возвращает длину*/
+int getlines(char s[], int lim)
+{
+    int c, i;
+
+    for (i = 0; i < lim-1 && (c = getchar()) != EOF && c != '\n'; i++)
+        s[i] = c;
+    if (c == '\n')
+    {
+        s[i] = c;
+        i++;
+    }
+    s[i] = '\0';
+    return i;
+}
+
+/*copy: копирует из 'from' в 'to'; to достаточно большой*/
+void copy(char to[], char from[])
+{
+    int i;
+
+    i = 0;
+    while ((to[i] = from[i]) != '\0')
+        i++;
+}
+
+
+/*##################################################*/
+/*Упражнение 1.16. Перепишите main предыдущей программы так, 
+чтобы она могла печатать самую длинную строку без каких-либо 
+граничений на ее размер.
+
+Упражнение 1.16.
+В русском варианте перевод какой-то неточный, дословно перевод 
+говорит, что надо определить длину вводимой строки, вывести 
+её на экран и напечатать часть текста(которая входит в диапазон 
+массива).*/
+
+#include <stdio.h>
+#define MAXLINE 10 /*максимальный размер вывода строки на экран*/
+
+int getlin(char line[], int MAX);
+void copy(char to[], char from[]);
+
+/*печать самой длинной строки*/
+int main()
+{
+    int len; //длина текущей строки
+    int max; //длина максимальной из рассмотренных строк
+    char line[MAXLINE]; //текущая строка
+    char longest[MAXLINE]; //самая длинная строка
+    int c; //вводимый символ getchar()
+    max = 0;
+    while ((len = getlin(line, MAXLINE)) > 0)
+    {
+        if (line[len-1] != '\n')
+            while ((c = getchar()) != EOF && c != '\n')     
+                len++;
+        if (len > max)
+        {
+            max = len;
+            copy(longest, line);
+        }
+    }
+    if (max < MAXLINE) // вычитаем символ '\0', вставленный в getlin
+        max--;
+    if (max > 0)
+    {
+        printf("Самая длинная строка\n");
+        if (max > MAXLINE)
+            printf("%s...\n", longest);
+        else
+            printf("%s\n", longest);
+    }
+    printf("длина строки - %d символов\n", max);
+    return 0;
+}
+
+/*getlin: читает строку в s, возвращает длину*/
+int getlin(char s[], int lim)
+{
+    int c, i;
+
+    for (i = 0; i < lim-1 && (c = getchar()) != EOF && c != '\n'; i++)
+        s[i] = c;
+    if (c == '\n')
+    {
+        s[i] = c;
+        i++;
+    }
+    s[i] = '\0';
+    return i;
+}
+
+/*copy: копирует из 'from' в 'to'; to достаточно большой*/
+void copy(char to[], char from[])
+{
+    int i;
+
+    i = 0;
+    while ((to[i] = from[i]) != '\0')
+        i++;
+}
+
+/*##################################################*/
