@@ -719,4 +719,204 @@ void copy(char to[], char from[])
         i++;
 }
 
+
+
+/*##################################################*/
+/*Упражнение 1.17. Напишите программу печати всех вводимых строк, 
+содержащих более 10 символов.*/
+
+#include <stdio.h>
+#define MAXLINE 1000 //Маскимальный размер вводимой строки
+#define BORDER 10
+
+int getlin(char line[], int MAX);
+
+/*печать строки длинной больше 10 символов*/
+int main()
+{
+    int len; //длина текущей строки
+    char line[MAXLINE]; //текущая строка
+    while ((len = getlin(line, MAXLINE)) > 0)
+        if ((len - 1) > BORDER)
+            printf("Эта строка больше 10 символов: %s\n", line);
+    return 0;
+}
+
+/*getlin: читает строку в s, возвращает длину*/
+int getlin(char s[], int lim)
+{
+    int c, i;
+
+    for (i = 0; i < lim-1 && (c = getchar()) != EOF && c != '\n'; i++)
+        s[i] = c;
+    if (c == '\n')
+    {
+        s[i] = c;
+        i++;
+    }
+    s[i] = '\0';
+    return i;
+}
+
+
+/*##################################################*/
+/*Упражнение 1.18. Напишите программу, которая будет в 
+каждой вводимой строке заменять стоящие подряд 
+символы пробелов и табуляций на один пробел и 
+удалять пустые строки.
+
+
+В оригинале звучит так - Напишите программу, 
+чтобы удалить завершающие пробелы и символы табуляции 
+в каждой строке ввода, и чтобы полностью удалить 
+пустые строки.*/
+
+#include <stdio.h>
+#define MAXLINE 1000 // максимальный размер вводимой строки
+
+int getlin(char line[], int MAX);
+
+int main()
+{
+    int len, i; //длина текущей строки, переменная
+    char line[MAXLINE]; //текущая строка
+    while((len=getlin(line, MAXLINE))>0)
+    {
+        len-=1;//отнимаем '\0'
+        /*уменьшаем строку, убирая пробелы и табуляции */
+        for(i=len-1; i>=0; i--)
+            if(line[i]=='0' || line[i]=='1')
+                len--;
+            else i=0;
+        if (len!=0)//если строка не пустая выводим её
+        {
+            for(i=0; i<len; i++)
+                printf("%c", line[i]);
+            printf("\n");
+        }
+    }
+    return 0;
+}
+
+/*getline читает строку в s, возвращает длину*/
+int getlin(char s[], int lim)
+{
+    int c, i;
+    for(i=0; i<lim-1 && (c=getchar()) != EOF && c!='\n'; i++)
+        s[i]=c;
+    if(c=='\n')
+    {
+        s[i]=c;
+        i++;
+    }
+    s[i] = '\0';
+    return i;
+}
+
+
+/*##################################################*/
+/*Упражнение 1.19. Напишите функцию reverse(s), 
+размещающую символы в строке s в обратном порядке. 
+Примените ее при написании программы, которая каждую 
+вводимую строку располагает в обратном порядке.*/
+
+#include <stdio.h>
+#define MAX 1000
+
+void reverse(char s[], int n);
+int main(int argc, char **argv)
+{
+    
+    char line[MAX];
+    int i, m;
+    char c;
+    i=0;
+    while((c=getchar()) != EOF)
+    {
+        line[i]=c;
+        i++;
+        if(c=='\n')
+        {
+            line[i]='\0';
+            m=i;   //запоминаем длину введённой строки
+            i=0;
+            reverse(line, m);
+            printf("%s\n", line);
+        }
+    }
+    return 0;
+}
+
+void reverse(char s[], int n)
+{
+    char tmp[MAX];
+    int i, j;
+    for(i=0; i<n; i++)
+        tmp[i]=s[i];
+    i-=2; //отнимаем символ \0, и ещё один элемент 
+    /*из-за правил нумерации массива*/
+    for(j=0; j<(n-1); j++, i--)
+        s[j]=tmp[i];
+}
+
+
+/*##################################################*/
+
+#include <stdio.h>
+
+#define MAXLINE 1000 /*максимальный размер вводимой строки*/
+
+int max; /*блина максимальной из просмотренных строк*/
+char line[MAXLINE]; /*текущая строка*/
+char longest[MAXLINE]; /*самая длинная строка*/
+
+int getlin(void);
+void copy(void);
+
+/*печать самой длинной строки: специализированная версия*/
+main()
+{
+    int len;
+    extern int max;
+    extern char longest[];
+    max = 0;
+    while ((len = getlin()) > 0)
+        if (len > max)
+        {
+            max = len;
+            copy();
+        }
+    if (max > 0) /*была хотя бы одна строка?*/
+        printf("%s", longest);
+    return 0;
+}
+
+/* getline: специализированная версия */
+int getlin(void)
+{
+    int c, i;
+    extern char line[];
+    for (i = 0; i < MAXLINE-1 && (c = getchar()) != EOF && c != '\n'; ++i)
+        line[i] = c;
+    if (c == '\n')
+    {
+        line[i] = c;
+        ++i;
+    }
+    line[i] = '\0';
+    return i;
+}
+
+/* copy: специализированная версия */
+void copy(void)
+{
+    int i;
+    extern char line[], longest[];
+
+    i = 0;
+    while ((longest[i] = line[i]) != '\0')
+        ++i;
+}
+
+
 /*##################################################*/
