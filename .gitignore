@@ -1,0 +1,7 @@
+*.dat
+temp.*
+temp.cpp
+
+# Executables
+*.exe
+*.out
