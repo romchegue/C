@@ -882,6 +882,122 @@ int main () {
 
 
 /*##################################################*/
+#include <stdio.h>
+#include <string.h>
+int main () {
+    char s1[] = "ku-ku", s2[10];
+	strncpy (s2, s1, 2);     // copy 2 symbols from s1 to s2
+	puts ( s2 );       // ERROR! There is no '\0'
+	s2[2] = '\0';      // add '\0'
+	puts ( s2 );	   // output
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+#include <string.h>
+int main () {
+    int n;
+	char s1[80] = "Ivan Rozhdestvenskiy",
+         s2[] = "Petrovich";
+    n = strlen (s2);   // length of the second string
+    strcpy (s1+5+n, s1+5);   // we try to push the string by n characters
+    strncpy (s1+5, s2, n);   // insert s2 
+    puts ( s1 );
+}
+
+
+/*##################################################*/
+/* Задача. Ввести с клавиатуры фамилию и имя в одну 
+строку (допустим, "Иванов Вася"). Построить в памяти 
+строку «Привет, Вася Иванов!». */
+
+#include <stdio.h>
+#include <string.h>
+int main () {
+    int n, len;
+	char s[80];
+	char a[80] = "Hello, ";
+	
+	printf ( "Input SURNAME and NANE (ex.: Ivanov Petr):\n" );
+	gets ( s );
+		
+	n = 0;
+    while ( s[n] != ' ' && s[n] != '\0' )      // First space or the end of string
+    	n++;                                   // length of the the first word - surname
+       
+    if ( s[n] != ' ' ) {             // if no space ...
+    	printf ( "[ERROR] Wrong string!\n" );
+    	return 1;
+	}
+        
+    strcat ( a, s+n+1 );        // a[] = "Hello, Name\0"
+    strcat ( a, " ");           // a[] = "Hello, Name \0"
+    len = strlen ( a );         // a[len] = '\0'
+    strncpy ( a+len, s, n );    // a[] = "Hello, Name Surname"
+    strcpy ( a+len+n, "!" );    // a[] = "Hello, Name Surname!\0"
+    
+    puts ( a );
+    return 0;
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+#include <string.h>
+int main () {
+	char s1[] = "Mom was washing the frame",
+	     s2[] = "War and peace", *p;
+    p = strchr ( s1, 'a' );
+    if ( p != NULL ) {
+    	printf ( "The first letter a: number %d\n", p-s1 );
+		p = strrchr( s1, 'a' );
+		printf ( "The last letter a: number %d\n", p-s1 ); 
+	}
+	
+	p = strstr ( s2, "and" );
+	if ( p != NULL )
+		printf ( "\nFound 'and' in %s at %d position\n", s2, p-s2 );
+	else printf ( "\nThere is no word 'and' in %s\n", s2 );
+	return 0;
+}
+
+
+/*##################################################*/
+/* Задача. С клавиатуры вводится предложение и слово. 
+Надо определить, сколько раз встречается это слово в 
+предложении. */
+#include <stdio.h>
+#include <string.h>
+int main () {
+    char s[80], word[20], *p, *start;
+    int count, len;
+    
+	puts ( "Input a sentence: " );
+    gets ( s );
+    puts ( "Input a word for search: " );
+    gets ( word );
+    len = strlen ( word );     // find a len of the word
+    count = 0;    // counter of found words
+    start = s;    //  start = s[0] - start of the string
+	while ( 1 ) {
+		p = strstr ( start, word );
+		if ( p == NULL ) break;
+		else {
+			count++;
+			start = p + len;
+		}
+	} 
+    
+    printf ( "The word %s meets %d times in the sentence\n", word, count);
+	return 0;
+}
+
+
+/*##################################################*/
+
+
+
 
 
 
