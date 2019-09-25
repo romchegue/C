@@ -501,4 +501,387 @@ int main () {
 
 
 /*##################################################*/
+/* Array sorting - bubble method */
+
+#include <stdio.h>
+
+const int N = 10;
+
+int main () {
+	int i, j, c;
+	int A[N] = {8, 5, 4, 2, 7, 0, 3, 78, 15, 1};
+	
+    for ( i = 0; i < N-1; i++ ) {
+    	for ( j = N-2; j >= i; j-- ) {
+    		if ( A[j] > A[j+1] ) {
+    			c = A[j];
+    			A[j] = A[j+1];     // change A[j] and A[j+1]
+    			A[j+1] = c;
+			}
+		}
+	}
+
+	printf ( "The result:\n" );
+	for ( i = 0; i < N; i++ ) 
+	    printf ( "%d ", A[i] );
+	
+	printf ( "\n- - - - - - - - - -\n" );
+	return 0;
+}
+
+
+/*##################################################*/
+/* Array sorting - minimum element selection method */
+
+#include <stdio.h>
+
+const int N = 10;
+
+int main () {
+	int i, j, min;
+	int A[N] = {8, 5, 4, 2, 7, 0, 3, 78, 15, 1};
+	
+	for ( i = 0; i < N; i++ ) {
+		min = A[i];
+		for ( j = i+1; j < N; j++ ) {
+			if ( A[j] < A[i] ) {
+				min = A[j];
+				A[j] = A[i];
+				A[i] = min;
+			}
+		}
+	}
+	
+	printf ( "The result:\n" );
+	for ( i = 0; i < N; i++ ) 
+	    printf ( "%d ", A[i] );
+	
+	printf ( "\n- - - - - - - - - -\n" );
+	return 0;
+}
+
+
+/*##################################################*/
+/* Array sorting - minimum element selection method */
+
+#include <stdio.h>
+
+const int N = 10;
+
+int main () {
+	int i, j, nMin, c;
+	int A[N] = {8, 5, 4, 2, 7, 0, 3, 78, 15, 1};
+	
+	for ( i = 0; i < N-1; i++ ) {
+		nMin = i;
+		for ( j = i+1; j < N; j++ ) {
+			if ( A[j] < A[nMin] ) {
+				nMin = j;
+			}
+	    }
+	    
+		if ( nMin != i ) {
+			c = A[i];
+			A[i] = A[nMin];
+			A[nMin] = c;
+		}
+	}
+	
+	printf ( "The result:\n" );
+	for ( i = 0; i < N; i++ ) 
+	    printf ( "%d ", A[i] );
+	
+	printf ( "\n- - - - - - - - - -\n" );
+	return 0;
+}
+
+
+/*##################################################*/
+/* Double array search method in !!!SORTED!!! array*/
+
+#include <stdio.h>
+
+const int N = 20;
+
+int main () {
+	int x, L, R, m, flag=0;
+	int A[N] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}; // !!!SORTED ARRAY!!!!
+	
+	L = 0; R = N-1;
+	
+	printf ( "Input an element you serach: " );
+	scanf ("%d", &x);
+	
+	while ( L <= R ) {
+		m = (L + R) / 2;
+		if ( A[m] == x ) {
+			flag = 1;
+			break;
+		}
+		if ( x < A[m] ) R = m - 1;
+		else L = m + 1;    	
+	}
+   
+    if (flag) 
+        printf ( "x = %d is at A[%d]\n", x, m );
+    else
+        printf ( "x = %d not in A[]\n", x, m );
+	
+	return 0;
+}
+
+
+/*##################################################*/
+
+int Sum ( int A[], int N ) {     // A[] – parameter-array; N - array size
+	int i, sum;
+	sum = 0;
+	
+	for ( i = 0; i < N; i++ )
+		sum += A[i];
+	
+	return sum;
+}
+
+
+/*##################################################*/
+
+main()
+{
+    int A[20], B[30], s;
+    // здесь надо ввести массивы A и B
+    s = Sum(A,20); // вычисляем сумму элементов массива A
+    printf("Сумма массива A %d, массива B %d", s, Sum(B,30) ); // вычисляем сумму B прямо при выводе
+}
+
+
+/*##################################################*/
+
+/* СИМВОЛЬНЫЕ СТРОКИ */
+// Заканчиваются символом'\0'
+char s[80] = "Привет, Вася!";
+char s[] = "Привет, Вася!";
+char *s = "Привет, Вася!";
+const char PRIVET[] = "Привет, Вася!";
+
+
+/*##################################################*/
+
+#include <stdio.h> 
+
+main () {
+	char Name[50];
+	printf ( "What is you name?\n" );
+	//scanf ( "%s", Name );
+	gets ( Name );
+	//printf ( "Hello, %s\n", Name );
+	puts ( "Hello," );
+	puts ( Name );
+	return 0;
+}
+
+
+/*##################################################*/
+/* Задача. Ввести символьную строку и заменить в ней 
+все буквы 'A' на буквы 'B'. */
+
+#include <stdio.h>
+
+int main () {
+	char s[50];
+	int i;
+	printf ( "Input a string:\n" );
+	gets ( s );
+	
+	i = 0;
+	while ( s[i] != '\0') {
+		if ( s[i] == 'A' )
+		    s[i] = 'B';
+		i++;
+	}
+	
+	puts ( "The result:\n" );
+	puts ( s );
+	return 0;
+}
+
+
+/*##################################################*/
+
+#include <stdio.h>
+main()
+{
+    char s[80];
+	FILE *fp;
+	fp = fopen ( "input.dat", "r");
+	fscanf ( fp, "%s", s );             //функция fscanf применяется тогда, когда надо читать файл по словам.
+	printf ( "The first word - %s", s );
+    fclose (fp);  
+}
+
+
+/*##################################################*/
+
+#include <stdio.h>
+main()
+{
+    char s[80];
+	FILE *fp;
+	fp = fopen ( "input.dat", "r");
+    if ( NULL  == fgets ( s, 80, fp ) )
+        printf ( "Failed to read line\n" );
+    else printf ( "The first string - %s\n", s );
+    fclose (fp);  
+}
+
+
+/*##################################################*/
+/* Задача. В каждой строке файла input.dat заменить 
+все буквы 'A' на 'Б' и вывести измененный текст в 
+файл output.dat. */
+
+#include <stdio.h>
+const int N = 80;
+
+int main () {
+	char s[N];
+	int i;
+	FILE *fin, *fout;
+	
+	fin = fopen ( "input.dat", "r" );
+	if ( fin == NULL ) {
+		printf ( "[ERROR] No such file with data" );
+		return 1;
+	}
+	
+	fout = fopen ( "output.dat", "w" );
+	
+	while ( NULL != fgets ( s, N, fin ) ) {   // read line
+		i = 0;
+		while ( s[i] != '\0' ) {
+			if ( s[i] == 'A' ) 
+				s[i] = 'B';
+            i++;
+		}
+	    fprintf ( fout, "%s", s );      // output a line to the file
+	}
+	
+	fclose ( fin );
+	fclose ( fout );
+	return 0;
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+#include <string.h>
+int main () {
+	int len;
+	char s[] = "Prodigy";
+	len = strlen(s);
+	printf ( "The length of string %s is %d\n", s, len );
+	return 0;
+}
+
+
+/*##################################################*/
+/* Задача. В текстовом файле input.dat записаны 
+строки текста. Вывести в файл output.dat
+в столбик длины этих строк. */
+
+#include <stdio.h>
+#include <string.h>
+int main () {
+	FILE *fin, *fout;
+	char s[80];
+	
+    fin = fopen ( "input.dat", "r" );
+    if ( fin == NULL ) {
+    	printf ( "[ERROR] No such file with data\n" );
+    	return 1;
+	}
+
+    fout = fopen ( "output.dat", "w" );
+    while ( NULL != fgets ( s, 80, fin ) )
+    	fprintf ( fout, "%d\n", strlen ( s ) );    
+    
+    fclose ( fin );
+    fclose ( fout );
+	return 0;
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+#include <string.h>
+int main () {
+    char s1[] = "Vasya";
+    char s2[] = "Petya";
+    if ( 0 == strcmp (s1, s2) ) 
+        printf ( "Strings %s and %s are identical\n", s1, s2 );
+    else printf ( "Strings %s and %s are different\n", s1, s2 );
+    
+	return 0;
+}
+
+
+/*##################################################*/
+/* Задача. Ввести две строки и вывести их в 
+алфавитном порядке. */
+#include <stdio.h>
+#include <string.h>
+int main () {
+    char s1[80], s2[80];
+    int a, b;
+    
+    printf ( "Input a string #1: " );
+	gets ( s1 );
+	printf ( "Input a string #2: " );
+	gets ( s2 );
+	    
+    if ( strcmp (s1, s2) < 0) 
+        printf ( "%s\n%s\n", s1, s2 );
+    else printf ( "%s\n%s\n", s2, s1 );
+    
+	return 0;
+}
+
+
+/*##################################################*/
+/* Задача. Составить программу, которая определяет, 
+сколько цифр в символьной строке. Программа должна 
+работать только при вводе пароля «куку». */
+
+#include <stdio.h>
+#include <string.h>
+int main () {
+	int i, count;
+    char s[80];
+    char pwd[] = "kuku";
+    
+    do {
+    	printf ( "Password: " );
+        gets ( s );
+	} while ( strcmp ( s,pwd )  );
+
+    printf ( "Input the string: " );
+    gets ( s );
+    // printf ( "String has length %d", strlen( s ) );
+    
+    i = 0;
+    count = 0;
+    while ( s[i] != '\0' ) {
+    	if ( s[i] >= '0' && s[i] <= '9' ) 
+    	    count++;
+    	i++;
+	}
+	
+    printf ( "Your string contains %d digits\n", count ); 
+	return 0;
+}
+
+
+/*##################################################*/
+
+
 
