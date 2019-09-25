@@ -1,23 +1,16 @@
 #include <stdio.h>
-#include <string.h>
-main()
+#include <graphics.h>
+int main()
 {
-char pass[] = "kuku", // правильный пароль
-s[80]; // вспомогательная строка
-int i, count = 0;
-printf ("Password: ");
-gets(s);
-if ( strcmp ( pass, s ) != 0 )
-{
-printf ( "wrong password\n" );
-return 1; // выход по ошибке, код ошибки 1
-}
-printf ("Input a string: ");
-gets(s);
-i = 0;
-while ( s[i] != '\0' ) {
-if ( s[i] >= '0' && s[i] <= '9' )
-count ++;
-}
-printf("\nFound %d digits", count);
+    char s[80];
+    int x, y;
+    FILE *fp;
+    fp = fopen ( "input.dat", "r" );
+	while ( fgets ( s, 80, fp ) )
+	    if ( s[0] == '#' ) {
+	    	sscanf ( s+1, "%d%d", &x, &y );
+			break; 
+		}
+	fclose ( fp );
+	printf ( "x = %d, y = %d", x, y );
 }
