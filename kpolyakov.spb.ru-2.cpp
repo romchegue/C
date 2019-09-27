@@ -1342,5 +1342,22 @@ int main () {
 /*##################################################*/
 /* –≈ ”—–»ﬂ */
 
+int Factorial( int n) {
+	if ( n <= 0 ) return 1;           // return 1
+	else return n * Factorial ( n-1 );   // recursive call
+}
+
+// ##############ALTERNATIVE ############
+
+void Factorial ( int n, int &fact ) {
+	if ( n == 0 ) fact = 1;     // the end of recursion
+	else {
+		Factorial ( n-1, fact );   // recursive call; count (n-1)!
+		fact *= n;              // n! = n * (n-1)!
+	}
+}
+
+
+/*##################################################*/
 
 
