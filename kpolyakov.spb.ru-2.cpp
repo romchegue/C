@@ -1032,5 +1032,207 @@ int main()
 
 
 /*##################################################*/
+#include <stdio.h>
+#include <stdlib.h>
+//int A[3][5];
+int random ( int N ) { return rand() % N; };
+
+
+int main () {
+	//int A[3][5];
+	const int M = 5;
+	const int N = 10;
+	int A[M][N];
+	int i=0, j=0, a, b;
+	printf ( "Input range (a, b): " );
+	scanf ( "%d%d", &a, &b );
+	
+	for ( i = 0; i < M; i++ )
+	    for ( j = 0; j < N; j++ ) {
+		    //A[i][j] = i * j + 100;
+	        //printf ( "A[%d][%d] = \n", i, j );
+	        //scanf ( "%f", &A[i][j] );
+	        A[i][j] = random(b-a+1) + a;
+	    };
+	
+	printf ( "Matrix A:\n" );
+	for ( i = 0; i < M; i++ ) {
+	    for ( j = 0; j < N; j++ )
+	        printf ( "%4d ", A[i][j] );
+	    printf ( "\n" );
+        }
+
+	getchar();
+	return 0;
+}
+
+
+/*##################################################*/
+/* Работа с файлами */
+/* Текстовые файлы */
+
+
+#include <stdio.h>
+const int M = 5;
+const int N = 4;
+int main () {
+    int i, j, A[M][N];
+    FILE *fp;
+	fp = fopen ( "input.dat", "r" );
+	for ( i = 0; i < M; i++ ) 
+	    for ( j = 0; j < N; j++ )
+		    if ( 0 == fscanf ( fp, "%d", &A[i][j] ) ) {
+		    	puts ( "[ERROR] Not enough data\n" );
+		    	fclose ( fp );
+		    	return 1;
+			}
+	fclose ( fp );
+	for ( i = 0; i < M; i++ ) {
+	    for ( j = 0; j < N; j++ )	
+	        printf ( "%4d ", A[i][j] );
+	    puts ( "\n" );    
+	}
+    puts ( "\n" );
+}
+
+
+/*##################################################*/
+/* Двоичные файлы */
+
+#include <stdio.h>
+const int M = 5;
+const int N = 4;
+int main () {
+    int total, A[M][N];
+    FILE *fp;
+	fp = fopen ( "input.dat", "rb" );
+    total = fread ( A, sizeof(int), M*N, fp ); 
+    fclose ( fp );
+    if ( total != M*N ) {
+    	puts ( "[ERROR] Not enough data\n" ); 
+    	return 1;
+	}
+    fp = fopen ( "output.dat", "wb" );
+    if ( M*N != fwrite ( A, sizeof(int), M*N, fp ) )
+	    puts ( "[ERROR] An error of writing to the file\n" );   
+    fclose ( fp );
+    puts ( "\n" );
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+const int M = 5;
+const int N = 5;
+int main () {
+    int i, j, A[M][N];
+    FILE *fp;
+	fp = fopen ( "input.dat", "r" );
+	for ( i = 0; i < M; i++ ) 
+	    for ( j = 0; j < N; j++ )
+		    if ( 0 == fscanf ( fp, "%d", &A[i][j] ) ) {
+		    	puts ( "[ERROR] Not enough data\n" );
+		    	fclose ( fp );
+		    	return 1;
+			}
+	fclose ( fp );
+
+	for ( i = 0; i < M; i++ ) {
+	    for ( j = 0; j < N; j++ )
+	        printf ( "%4d ", A[i][j] );
+	    puts ( "\n" );    
+	    }
+	
+//	for ( i = 0; i < M; i++ )
+//	    for ( j = 0; j <= i; j++ )
+//		    A[i][j] = 0;	 
+  
+
+	for ( i = 0; i < M; i++ ) 
+	    for ( j = N-1-i; j < N; j++ )
+		    A[i][j] = 0;	   
+	
+	for ( i = 0; i < M; i++ ) {
+	    for ( j = 0; j < N; j++ )
+	        printf ( "%4d ", A[i][j] );
+	    puts ( "\n" );    
+	    }
+	
+    puts ( "\n" );
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+
+int main () {
+    char s[20][80];
+    int i, count = 0;
+    
+    printf ( "Input text (Enter - finish):\n" );
+    
+    for ( i = 0; i < 20; i ++ ) {
+    	gets ( s[count] );
+    	if ( s[count][0] == '\0' )
+    	    break;
+    	count++;
+        }
+   
+    printf ( "#####\n" ); 
+    for ( i = 0; i < 20; i++ ) {
+    	if ( s[i][0] == '\0' )
+    	    break;
+		printf ( "%s\n", s[i] );
+	}
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+#include <string.h>
+
+void SortStrings ( char *s[], int n ); 
+
+int main () {
+    char s[20][80];   // array of 20 string
+    char *ps[20];     // array of 20 string pointers
+    int i, count = 0;
+    
+    printf ( "Input text (Enter - finish):\n" );
+    
+    for ( i = 0; i < 20; i ++ ) {
+    	gets ( s[count] );
+    	if ( s[count][0] == '\0' )
+    	    break;
+    	count++;
+    }
+   
+    for ( i = 0; i < count; i++ )
+        ps[i] = s[i];                 // put up pointers
+     
+    SortStrings ( ps, count );
+   
+    printf ( "#####\n" ); 
+    for ( i = 0; i < count; i++ ) {
+		puts ( ps[i] );             // output via pointers;
+	}
+}
+
+
+void SortStrings ( char *s[], int n ) {  // *s[] - массив указателей; n - число строк
+    char *p;
+    int i, j;
+    for ( i = 0; i < n-1; i++ )
+        for ( j = n-1; j > i; j-- )
+            if ( strcmp ( s[j-1], s[j] ) > 0 ) {
+            	p = s[j];
+            	s[j] = s[j-1];     // rearrangement of POINTERS
+            	s[j-1] = p;
+			}
+}
+
+
+/*##################################################*/
+
 
 
