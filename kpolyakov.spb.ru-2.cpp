@@ -1233,6 +1233,114 @@ void SortStrings ( char *s[], int n ) {  // *s[] - массив указателей; n - число 
 
 
 /*##################################################*/
+#include <stdio.h>
+
+int main () {
+	int i, *p;
+	scanf ( "%d", &i );
+	p = &i;
+	printf ( "[OUTPUT] Address of i = %p\n", p );
+}
+
+
+/*##################################################*/
+/* Динамическое выделение памяти */
+
+#include <stdio.h>
+main () {
+	int N, i, j, p;
+	int *A;    // pointer for memory allocation
+	printf ( "Size of array > " );
+	scanf ( "%d", &N );
+	A = new int [N];   // memory allocation
+	if ( A == NULL) {
+		printf ( "[ERROR] Can't allocate memory\n" );
+		return 1;
+	}
+	for ( i = 0; i < N; i++ ) {
+		printf ( "\nA[%d] > ", i+1 );
+		scanf ( "%d", &A[i] );
+	}
+	
+	for ( i = 0; i < N-1; i++ )
+	    for ( j = N-1; j > i; j-- ) 
+	        if ( A[j-1] > A[j] ) {
+	        	p = A[j-1];
+	        	A[j-1] = A[j];
+	        	A[j] = p;
+ 			}
+	
+	puts ( "The result:\n" );    
+	for ( i = 0; i < N; i++)
+	    printf ( "%d ", A[i] );
+	
+	delete A;
+}
+
+
+/*##################################################*/
+/* ВЫДЕЛЕНИЕ ПАМЯТИ ДЛЯ МАТРИЦЫ */
+
+/* KNOWN SIZE OF A STRING */
+#include <stdio.h>
+//int **A;
+typedef int row10[10];   // new type: array of 10 items
+
+int main () {
+	int N;
+	row10 *A;        // pointer to array (matrix)
+	printf ( "Input number of rows: " );
+	scanf ( "%d", &N );
+	A = new row10[N];       // allocate memory for N strings
+	//... use matrix as usual
+	delete A;    // free memory
+	return 0;
+}
+
+
+/*##################################################*/
+/* UNKNOWN SIZE OF A STRING*/
+
+#include <stdio.h>
+
+typedef int *pInt;    // new data type: pointer at integer
+
+int main () {
+    int M, N, i;
+    pInt *A;     // pointer at pointer
+    // ... input M, N
+    A = new pInt *[M];     // allocate memory for an array
+    for ( i = 0; i < M; i++ )     // cycle through all pointers
+	    A[i] = new int[N];       // allocate memory for string i
+	// ... work with a matrix 	
+	for ( i = 0; i < M; i++ )
+	    delete A[i];        // free memory for all strings
+	delete A;	        // free an array of pointers
+	return 0;
+}
+
+// ##############ALTERNATIVE ############
+#include <stdio.h>
+
+typedef int *pInt;    // new data type: pointer at integer
+
+int main () {
+    int M, N, i;
+    pInt *A;       // pointer at pointer
+    // ... input M, N
+    A = new pInt[M];    // memory for array of pointers
+    A[0] = new int[M*N];  // memory for a matrix
+    for ( i = 1; i < M; i++ )      // set the pointers
+        A[i] = A[i-1] + N;
+    // ... work with a matrix
+	delete A[0];    // free a matrix
+	delete A;	// free an array of pointers
+	return 0;
+}
+
+
+/*##################################################*/
+/* РЕКУСРИЯ */
 
 
 
