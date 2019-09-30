@@ -1,7 +1,10 @@
 *.dat
 temp.*
 temp.cpp
-
+TEST*
 # Executables
 *.exe
 *.out
+
+#links
+*.lnk

@@ -1359,5 +1359,126 @@ void Factorial ( int n, int &fact ) {
 
 
 /*##################################################*/
+#include <stdio.h>
+
+const int N = 40;
+int Fib ( int n );
+    
+int main () {
+    printf ( "The result: %d", Fib (N) );
+    return 0;
+}
+
+/*
+int Fib ( int n )
+{
+    //printf ( "." );
+	if ( n == 0 ) return 0;
+    if ( n == 1 ) return 1;
+    return Fib(n-1) + Fib(n-2);
+}
+*/
+
+
+int Fib ( int n )
+{
+    int i, f1 = 1, f2 = 0, x;
+    if ( n == 0 ) x = f2;
+    if ( n == 1 ) x = f1;
+    for ( i = 2; i <= n; i++ ) {
+    	x = f1 + f2;
+    	f2 = f1;
+    	f1 = x;
+	}
+	return x;
+}
+
+
+/*##################################################*/
+#include <graphics.h>
+
+void RecCircle ( float x, float y, float R, int n ); 
+
+int main () {
+	initwindow ( 1200, 1000 );
+	setcolor ( COLOR(85,224,20) );
+	RecCircle ( 600, 500, 200, 6 );
+	getch();
+	closegraph();
+}
+
+void RecCircle ( float x, float y, float R, int n) {
+	float k = 0.5;
+	circle ( x, y, R );
+	if ( n <= 1 ) return;
+	RecCircle ( x+R, y, k*R, n-1 );
+	RecCircle ( x-R, y, k*R, n-1 );
+	RecCircle ( x, y+R, k*R, n-1 );
+	RecCircle ( x, y-R, k*R, n-1 );
+}
+
+
+
+/*##################################################*/
+#include <graphics.h>
+
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+
+void Pifagor( float x, float y, float L, float angle, int n)
+{
+    float k = 0.7, x1, y1;
+    x1 = x + L*cos(angle); // координаты второго конца
+    y1 = y - L*sin(angle);
+    line (x, y, x1, y1); // рисуем ствол
+    if ( n <= 1) return; // все нарисовали, выход
+    Pifagor(x1, y1, k*L, angle+M_PI_4, n-1); // рекурсивные
+    Pifagor(x1, y1, k*L, angle-M_PI_4, n-1); // вызовы
+}
+
+int main () {
+	initwindow ( 1200, 1000 );
+	setcolor ( COLOR(85,224,20) );
+	Pifagor ( 600, 800, 200, M_PI_2, 10 );
+	getch();
+	closegraph();
+}
+
+
+/*##################################################*/
+#include <stdio.h>
+
+void Combinations ( int A[], int N, int K, int q );
+void PrintData ( int Data[], int N );
+
+main()
+{
+    int A[5], N = 3, K = 3;
+    Combinations ( A, N, K, 0 );
+}
+
+
+void Combinations ( int A[], int N, int K, int q )
+{
+    if ( q == N ) // одна комбинация получена
+        PrintData ( A, N );
+    else
+        for (int i = 1; i <= K; i ++ ) {
+            A[q] = i;
+            Combinations(A, N, K, q+1); // рекурсивный вызов
+        }
+}
+
+void PrintData ( int Data[], int N )
+{
+    for (int i = 0; i < N; i++ )
+        printf("%2d ", Data[i]);
+    printf("\n");
+}
+
+
+/*##################################################*/
+
 
 
