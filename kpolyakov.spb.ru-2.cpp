@@ -1479,6 +1479,161 @@ void PrintData ( int Data[], int N )
 
 
 /*##################################################*/
+#include <stdio.h>
+
+void PrintData ( int Data[], int N )
+{
+    for (int i = 0; i < N; i++ )
+        printf("%2d ", Data[i]);
+    printf("\n");
+}
+
+void Split ( int R, int A[], int q ) {
+	int i, start = 1;
+	if ( R <= 0 ) {
+		PrintData ( A, q );
+		return;
+	}
+	if ( q > 0 ) start = A[q-1];    // новый элемент не меньше A[q-1]
+	for ( i=start; i <= R; i++ ) {   // перебрать всё до R
+		A[q] = i;
+		Split ( R-i, A, q+1 );       // рекурсивынй вызов
+	}
+}
+
+int main () {
+	int *A, S;
+	printf ( "Input a natural number: " );
+	scanf ( "%d", &S );
+	A = new int[S];    // allocate memory
+	if ( A == NULL ) return 1;
+	Split (S, A, 0);   
+	delete A;   // free memory
+}
 
 
+/*##################################################*/
+void QuickSort ( int A[], int from, int to )
+{
+    int x, i, j, temp;
+    if ( from >= to ) return; // условие окончания рекурсии
+    i = from; // рассматриваем элементы с A[from] до A[to]
+    j = to;
+    x = A[(from+to)/2]; // выбрали средний элемент
+    while ( i <= j ) {
+        while ( A[i] < x ) i ++; // ищем пару для перестановки
+        while ( A[j] > x ) j --;
+        if ( i <= j ) {
+            temp = A[i]; A[i] = A[j]; A[j] = temp; // перестановка
+            i ++; // двигаемся дальше
+            j --;
+        }
+    }
+    QuickSort ( A, from, j ); // сортируем левую часть
+    QuickSort ( A, i, to ); // сортируем правую часть
+}
+
+
+/*##################################################*/
+/*Задача. В файле books.dat записаны структуры типа 
+Book. Известно, что их не больше 100. Требуется 
+прочитать их в память, у всех книг установить 
+2009 год издания и записать обратно в тот же файл.*/
+#include <string.h>
+#include <stdio.h>
+
+struct Book {
+	char author[40]; // author of a book
+	char title[80];  // title of a book
+	int year;      // an year of publication
+	int pages;     // number of pages
+};
+
+int main () {
+	Book b[100];  // memory allocation for an array of structures
+ 	int i, n;
+ 	char tmp[80]; 
+	FILE *fp;
+	
+	// ###################stdin################################:
+    for ( i = 0; i < 100; i++ ) {
+    	printf ( "[%d book] - AUTHOR name: ", i+1 );
+    	scanf ( "%s", &tmp );      // !!! without spaces 
+    	strcpy ( b[i].author, tmp );
+    	printf ( "[%d book] - TITLE: ", i+1 );
+    	scanf ( "%s", &tmp );      // !!! without spaces 
+    	strcpy ( b[i].title, tmp );
+    	printf ( "[%d book] - year of publication: ", i+1 );
+    	scanf ( "%d", &b[i].year );
+    	printf ( "[%d book] - number of pages: ", i+1 );
+    	scanf ( "%d", &b[i].pages );
+		printf ( "\nMore? [y/n] " );
+		scanf ( "%s", &tmp ); 
+		if ( tmp[0] == 'n' || tmp[0] == 'N' )
+		    break;
+	    else puts ( "\n" );
+	}
+   
+    printf ( "i = %d\n", i );
+	fp = fopen ( "books.dat", "wb" );
+	fwrite ( &b, sizeof(Book), i+1, fp );
+	fclose ( fp );
+	
+	fp = fopen ( "books.dat", "rb" );
+	n = fread ( &b, sizeof(Book), 100, fp );
+	for ( i = 0; i < n; i++ )
+	    printf ( "%s + %s + %d + %d\n", b[i].author, b[i].title, b[i].year, b[i].pages );
+	    
+    fclose ( fp );
+    
+ /*   
+    // ###################read from file################################:
+    fp = fopen ( "input.dat", "r" );
+    if ( fp == NULL ) {
+    	printf ( "No such file with data\n" );
+		return 1;
+    }
+	else printf ( "[TEST] Good! File opened!\n\n");
+	
+    for ( i = 0; i < 100; i++ ) {
+		if ( NULL == fgets ( tmp, 40, fp) ) {
+			printf ( "[ERROR] Can't read a stirng\n" );
+			return 1;
+		}    
+    	else {
+    		strcpy ( b[i].author, tmp );
+    		printf ( "[TEST] b[%d].author = %s", i, b[i].author );
+		}
+		    
+		
+		if ( NULL == fgets ( tmp, 80, fp) ) {
+			printf ( "[ERROR] Can't read a stirng\n" );
+			return 1;
+		}    
+    	else {
+    		strcpy ( b[i].title, tmp );
+    		printf ( "[TEST] b[%d].title = %s", i, b[i].title );
+		}
+		    
+		fgets ( tmp, 80, fp );
+		sscanf ( tmp, "%d", &b[i].year );
+		printf ( "[TEST] b[%d].year = %d\n", i, b[i].year);
+		fgets ( tmp, 80, fp );
+		sscanf ( tmp, "%d", &b[i].pages );
+		printf ( "[TEST] b[%d].pages = %d\n", i, b[i].pages); 	
+	}
+    */
+    
+    fp = fopen ( "books.dat", "rb" );     // read 100 structures
+    n = fread( &b[0], sizeof(Book), 100, fp );
+    fclose ( fp );
+    for ( i = 0; i < n; i++ )     // processing of the read structure 
+        b[i].year = 2009;
+    fp = fopen ( "books.dat", "wb" );
+    fwrite ( b, sizeof(Book), n, fp );
+	fclose ( fp );
+}
+
+
+/*##################################################*/
 
