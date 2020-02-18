@@ -5,6 +5,8 @@ TEST*
 # Executables
 *.exe
 *.out
+*.tmp
+*.swo
 
 #links
 *.lnk
