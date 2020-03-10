@@ -1,0 +1,152 @@
+##### SWITCH-CASE
+
+#include <iostream>
+using namespace std;
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    float var1, var2;
+    char Operator;
+    cout << "Введите простое арифметическое выражение с двумя числами.\n(Пример: \'4 + 17\' или \'5 / 2\' и др.)" << endl;
+    cin >> var1 >> Operator >> var2;
+    switch (Operator)
+    {
+    case '+':
+        cout << "Результат: " << var1 + var2 << endl;
+        break;
+    case '-':
+        cout << "Результат: " << var1 - var2 << endl;
+        break;
+    case '*':
+        cout << "Результат: " << var1 * var2 << endl;
+        break;
+    case '/':
+        cout << "Результат: " << var1 / var2 << endl;
+        break;
+    default:
+        cout << "Вы ввели неправильный операнд: " << var1 << " \<???\> " << var2 << endl;
+        break;
+    }
+
+    return 0;
+}
+
+
+##### Цикл WHILE
+
+#include <iostream>
+using namespace std;
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    //cout << "Текст вывеля на экран" << endl;
+    int a = 0;
+
+    while (a < 10)
+    {
+        cout << "Переменная а = " << a << endl;
+        a++;
+    }
+
+    return 0;
+}
+
+
+##### Цикл DO-WHILE
+
+...
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    int a = 18;
+
+    do
+    {
+        cout << "Переменная а = " << a << endl;
+        a++;
+    } while (a < 20);
+    
+    return 0;
+}
+
+
+##### ДОМАШНЕЕ ЗАДАНИЕ #4
+/*1. Разработать программу, которая выводит на экран линию из символов. 
+Число символов, какой использовать символ, и какая будет линия - вертикальная, 
+или горизонтальная - указывает пользователь. */
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    char symbol;  // символ
+    int symbolCount;    // число символов
+    int lineType;  // тип линии - горизонтальная или вертикальная
+
+    cout << "[INFO] Эта программа выводит на экран линию из символов.\n" << endl;
+    cout << "Введите количество символов в линии: ";
+    cin >> symbolCount;
+    cout << "Введите символ: ";
+    cin >> symbol;
+    cout << "Выберите тип линии:" << endl
+        << "0 - горизонтальная линия" << endl
+        << "1 - вертикальная линия" << endl;
+    cin >> lineType;
+
+    while (symbolCount > 0)
+    {
+        switch (lineType)
+        {
+        case 0:
+        {
+            cout << symbol;
+            break;
+        }
+        case 1:
+        {
+            cout << symbol << endl;
+            break;
+        }
+        default:
+        {
+            cout << "[ERROR] Введён неправильный тип линии" << endl;
+            symbolCount = 0;
+            break;
+        }
+        }
+        symbolCount--;
+    }
+
+
+/*    switch (lineType)
+    {
+        case 0:
+        {
+            while (symbolCount > 0)
+            {
+                cout << symbol;
+                symbolCount--;
+            }
+            break;
+        }
+        case 1:
+        {
+            while (symbolCount > 0)
+            {
+                cout << symbol << endl;
+                symbolCount--;
+            }
+            break;
+        }
+        default:
+            cout << "[ERROR] Введён неправильный тип линии";
+            break;
+    }
+*/    
+   
+    cout << endl;
+
+    return 0;
+}
