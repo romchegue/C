@@ -1930,22 +1930,148 @@ void main()
 
 
 ###### Урок #66 - Препроцессор что это. Директива #define. Макросы. Директивы препроцессора что это. C++
+#include <iostream>
+#define PI 3.14
+#define tab "\t"
+#define begin {
+#define end }
+
+using namespace std;
+
+void main()
+{
+    //cout << "text" << tab << "text" << endl;
+    for (int i = 0; i < 5; i++)
+        begin
+            cout << i << endl;
+        end
+}
 
 
+###### Урок #67 - c++ макрос функция. Макросы с аргументами. Макрос с параметрами. C ++ Для начинающих.
+#include <iostream>
+#define FOO(x, y)((x)*(y))
+using namespace std;
+
+void main()
+{
+    cout << FOO(5, 6) << endl;
+}
 
 
+###### Урок #68 - Условная компиляция. #ifdef #else #endif #if #elif #endif #ifndef что это. C++
+#include <iostream>
+using namespace std;
+#define DEBUG 5
 
 
+void main()
+{
+    setlocale(LC_ALL, "rus");
+
+#ifdef DEBUG
+    cout << "Начало цикла" << endl;
+#endif    // DEBUG
+
+    for (int i = 0; i < 4; i++)
+    {
+        cout << i << endl;
+    }
+
+#ifdef DEBUG
+    cout << "Конец цикла" << endl;
+#endif    // DEBUG
+
+//////////////////////////////////////////////////////////////
+
+#ifdef DEBUG
+    cout << "Дебаг определен " << endl;
+#else 
+    cout << "Дебаг НЕ определён" << endl;
+#endif    // DEBUG
+
+//////////////////////////////////////////////////////////////
+
+#ifndef DEBUG                           // if NO def
+    cout << "Дебаг НЕ определен " << endl;
+#else 
+    cout << "Дебаг определён" << endl;
+#endif    // DEBUG
+
+//////////////////////////////////////////////////////////////
+
+#if DEBUG < 4
+    cout << "cout 1" << endl;
+#elif DEBUG == 5
+    cout << "cout 2" << endl;
+#else 
+    cout << "cout 3" << endl;
+#endif    // DEBUG
+
+//////////////////////////////////////////////////////////////
+}
 
 
+###### Урок #69 - Условный тернарный оператор что это. Как работает. Как использовать. C ++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+void main()
+{
+    setlocale(LC_ALL, "rus");
+    int a;
+    cout << "Input int a: " << endl;
+    cin >> a;
+    
+    /*
+    if (a < 10)
+    {
+        cout << "a < 10" << endl;
+    }
+    else
+    {
+        if (a > 10)
+        {
+            cout << "a > 10" << endl;
+        }
+        else
+        {
+            cout << "a == 10" << endl;
+        }
+    }
+    */
+
+    // (a < 10) ? (cout << "a < 10" << endl) : (cout << "a > 10" << endl);    // тернарный оператор. Можно без скобок!!!
+    // (a < 10) ? (a += 10) : (a++);
+    (a < 10) ? (cout << "a < 10" << endl) : (a > 10) ? (cout << "a > 10" << endl) : (cout << "a == 10" << endl);
+}
 
 
+###### Урок #70 - argc argv c++ что это. Параметры функции main argc argv. Аргументы main.
+#include <iostream>
+using namespace std;
+
+void main(int argc, char *argv[])
+{
+    cout << argc << endl;
+    
+    for (int i = 0; i < argc; i++)
+    {
+        cout << argv[i] << endl;
+    }
+    system("pause");
+}
 
 
+###### Урок #71 - int main или void main. int main vs void main c++. C ++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+
+    return 0;
+}
 
 
-
-
-
-
-
+###### Урок #72 
