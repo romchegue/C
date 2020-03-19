@@ -1764,7 +1764,173 @@ void main()
 }
 
 
-###### Урок #60 -
+###### Урок #60 - Строки в с++. Нуль терминатор. Что такое строка в с++. char c++ массив. С++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+void main()
+{
+    // char string[] = "Hello World!";
+    char string[] = {'H', 'e', 'l', 'l', 'o', '\0'};
+    // char string[] = { 'H', 'e', 'l', 'l', 'o'};
+    cout << strlen(string) << endl;
+}
+
+
+###### Урок #61 - Приведение типов в стиле с. Явное и неявное преобразование типов. Преобразование типов. С++
+#include <iostream>
+using namespace std;
+
+void main()
+{
+    double a = 33.3;
+
+    int b = 34.355445;         // неявное преобразование типов (будет int). В данном случае - сужающее - убирается часть числа
+    int b = a; 
+
+    cout << (int)a << endl;    // явное преобразование типов
+    cout << (bool)a << endl;
+    cout << (char)a << endl;
+}
+
+
+###### Урок #62 - Что такое ascii символы. ascii что это такое? Таблица ascii c++. C ++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+void main()
+{
+    setlocale(LC_ALL, "Rus");
+    //cout << sizeof(char) << endl;
+
+    for (int i = 0; i < 256; i++)
+    {
+        cout << "code = " << i << "\tchar = " << (char)i << endl;
+    }
+}
+
+
+###### Урок #63 - Указатели символьные строки и функции. Строки и указатели в c++. C ++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+void foo(char* str)
+{
+    cout << strlen(str);
+}
+
+void main()
+{
+    char string[] = "Hello!";
+    // char *str1 = string;
+    // const char *str2 = "Hello!"; 
+    //const char* strArr[] = {"Hello", "World", "TEST"};
+
+    /*
+    for (int i = 0; i < 3; i++)
+    {
+        cout << strArr[i] << endl;
+    }
+    */
+    foo(string);
+
+}
+
+
+###### Домашнее задание #11 - strlen c++ реализация. Посчитать количество символов в строке c++
+#include <iostream>
+using namespace std;
+
+int Strlen(const char* str)
+{
+    int count = 0;
+    while (str[count] != '\0')
+        count++;
+
+    return count;
+}
+
+void main()
+{
+    //char string[] = "Hello!";
+
+    char str[] = {'H', 'e', 'l', 'l', 'o', '\0'};
+
+    cout << Strlen(str) << endl;
+}
+
+
+###### Урок #64 - Конкатенация строк что это. Объединение строк.Тип данных string c++ что это.
+#define _CRT_SECURE_NO_WARNINGS    // Для стиля Си
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+void main()
+{
+    /*
+    ////////////////// Конкатенация в стиле Си: //////////////////
+    char result[255]{};      // инициализируем симовлами '\0'
+    char str1[255] = "Hello";
+    char str2[255] = "World";
+
+    cout << str1 << endl;
+    strcat(result, str1);       
+    strcat(result, str2);
+    cout << result << endl;
+    */
+    
+    string str1 = "Ivan";
+    string str2 = "Sergeevich";
+    string str3 = "Golovlev";
+    string result;
+
+    result = "Surname:\t" + str3 + "\nName:\t\t" + str1 + "\nSecond Name:\t" + str2;
+    cout << result << endl;
+}
+
+
+###### Урок #65 - Указатель на функцию в качестве параметра. Передача функции в качестве параметра. С++
+#include <iostream>
+#include <string>
+using namespace std;
+
+// тип функции(*имя указателя)(спецификация параметров);
+
+string GetDataFromAstral()
+{
+    return "Data From Astral";
+}
+
+string GetDataFromDB()
+{
+    return "Data From DB";
+}
+
+string GetDataFromWebServer()
+{
+    return "Data From Web Server";
+}
+
+void ShowInfo(string (*foo)())
+{
+    cout << foo() << endl ;
+}
+
+void main()
+{
+    /* int (*fooPointer)(int a);
+    fooPointer = Foo1;  
+    cout << Foo1(2) << endl;*/
+    ShowInfo(GetDataFromDB);
+    ShowInfo(GetDataFromWebServer);
+    ShowInfo(GetDataFromAstral);
+}
+
+
+###### Урок #66 - Препроцессор что это. Директива #define. Макросы. Директивы препроцессора что это. C++
+
 
 
 
