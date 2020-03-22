@@ -2295,3 +2295,277 @@ int main()
 
 
 ###### Урок #77 - Инкапсуляция ООП пример. private методы. Что такое инкапсуляция. C++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+class CoffeeGrinder
+{
+private:
+    bool CheckVoltage()
+    {
+        return true;
+    }
+
+public:
+    void Start()
+    {
+        if (CheckVoltage())
+        {
+            cout << "VjuHHH!" << endl;
+        }
+        else
+        {
+            cout << "Beep Beep" << endl;
+        }
+    }
+
+};
+
+
+int main() 
+{
+    CoffeeGrinder a;
+    a.Start();
+
+    return 0;
+}
+
+
+###### Урок #78 - Конструктор класса пример. Зачем нужен. Конструктор с параметрами. Конструктор по умолчанию.
+class Point
+{
+private:
+    int x;
+    int y;
+public:
+    Point(int valueX, int valueY)     // конструктор класса имеет то же имя, что и класс. Область public !!!
+    {
+        x = valueX;
+        y = valueY;
+    }
+
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+
+    void SetY(int valueY)
+    {
+        y = valueY;
+    }
+
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl << endl;
+    }
+};
+
+int main() 
+{
+    Point a(100, 4);
+    a.Print();
+
+    Point b(44, 47);
+    b.Print();
+
+    return 0;
+}
+
+
+###### Урок #79 - Перегрузка конструкторов класса. Что такое перегрузка. Как перегрузить конструктор.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Point
+{
+private:
+    int x;
+    int y;
+public:
+    Point()                                // конструктор по умолчанию                          
+    {
+        x = 0;
+        y = 0;
+    }
+
+    Point(int valueX, int valueY)          // перегрзука констурктора по умолчанию ( Point() )
+    {
+        x = valueX;
+        y = valueY;
+    }
+
+    Point(int valueX, bool boolean)          // перегрзука констурктора по умолчанию ( Point() )
+    {
+        x = valueX;
+        if (boolean)
+        {
+            y = valueX;
+        }
+        else
+        {
+            y = -valueX;
+        }
+    }
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+
+    void SetY(int valueY)
+    {
+        y = valueY;
+    }
+
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl << endl;
+    }
+};
+
+
+int main() 
+{
+    Point a;
+    a.Print();
+
+    Point b(4, 77);
+    b.Print();
+
+    Point c(999, false);
+    c.Print();
+
+    return 0;
+}
+
+
+###### Урок #80 - Деструктор что это. Зачем нужен деструктор класса в ООП. Деструктор с параметрами. Перегрузка. 
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+class MyClass
+{  
+private:
+    int *data;
+public:
+    MyClass(int size)
+    {
+        data = new int[size];
+    
+        for (int i = 0; i < size; i++)
+        {
+            data[i] = rand() % 10;
+        }
+
+        cout << "Object " << data << " Called constructor" << endl;
+    }
+    
+    ~MyClass()                                    // destructor. Может быть в классе лишь один! НЕ МОЖЕТ иметь параметры
+    {
+        delete[] data;
+        cout << "Object " << data << " Called destructor" << endl;
+    }
+
+};
+
+void Foo()
+{
+    cout << "Foo start of implementation" << endl;
+    MyClass a(9);
+    cout << "Foo end of implementation" << endl;
+}
+
+int main() 
+{
+    MyClass a(11);
+    Foo();
+
+    return 0;
+}
+
+
+###### Урок #81 - Ключевое слово this в ООП. Что означает. Что это такое. Для чего нужен this указатель C++
+#include <iostream>
+using namespace std;
+
+
+class Point
+{
+private:
+    int x;
+    int y;
+public:
+    Point()                                                    
+    {
+        x = 0;
+        y = 0;
+        cout << this << " - constructor" << endl;
+    }
+
+    Point(int valueX, int valueY)          
+    {
+        x = valueX;
+        y = valueY;
+        cout << this << " - constructor" << endl;
+    }
+
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+
+    void SetY(int y)
+    {
+        this->y = y;                         // this->
+    }
+
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl << endl;
+    }
+};
+
+
+int main() 
+{
+    Point a;
+    a.SetY(5);
+    a.Print();
+
+    return 0;
+}
+
+
+###### Урок #82 - Конструктор копирования. Что это. Пример. Когда вызывается Копирование объектов по умолчанию C++
