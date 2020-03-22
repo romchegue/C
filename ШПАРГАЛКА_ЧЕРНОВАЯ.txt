@@ -2569,3 +2569,76 @@ int main()
 
 
 ###### Урок #82 - Конструктор копирования. Что это. Пример. Когда вызывается Копирование объектов по умолчанию C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class MyClass
+{  
+public:
+    int *data;
+
+    MyClass(int size)
+    {
+        this->Size = size;
+        this->data = new int [size];
+
+        for (int i = 0; i < size; i++)
+        {
+            data[i] = i;
+        }
+
+        cout << "Called constructor " << this << endl;
+    }
+    
+    MyClass(const MyClass &other)
+    {
+        this->Size = other.Size;
+        
+        this->data = new int [other.Size];
+
+        for (int i = 0; i < other.Size; i++)
+        {
+            this->data[i] = other.data[i];
+        }
+
+        cout << "Called copy constructor " << this << endl;
+    }
+
+    ~MyClass()                                   
+    {
+        delete[] data;
+
+        cout << "Called destructor " << this << endl;
+    }
+private:
+    int Size;
+};
+
+
+void Foo(MyClass value)                             // вызывается КОНСТРУКТОР КОПИРОВАНИЯ
+{
+    cout << "Called function Foo()" << endl;
+}
+
+MyClass Foo2()
+{
+    cout << "Called function Foo2()" << endl;
+    MyClass temp(2);
+    
+    return temp;                                    // вызывается КОНСТРУКТОР КОПИРОВАНИЯ
+}
+
+int main() 
+{
+    MyClass a(10);
+    MyClass b(a);                                   // вызывается КОНСТРУКТОР КОПИРОВАНИЯ
+
+    // Foo(a);
+    // Foo2();
+
+    return 0;
+}
+
+
+###### Урок #83 - Перегрузка операторов пример. ООП. Перегрузка оператора присваивания. C++ Для начинающих.
