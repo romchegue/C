@@ -2074,4 +2074,224 @@ int main(int argc, char *argv[])
 }
 
 
-###### Урок #72 
+###### Урок #72 - Что такое ООП простыми словами. Объектно ориентированное программирование это
+
+
+###### Урок #73 - Что такое класс. Что такое объект класса. Экземпляр класса это. Класс ООП это.
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+class Human          // класс - пользовательский тип данных
+{
+public:              // модификатор доступа
+    int age;         // свойства класса (содержат характеристику класса) - это ПОЛЯ КЛАССА
+    string name;
+    int weight;
+};
+
+class Point
+{
+public:
+    int x;
+    int y;
+    int z;
+};
+
+int main() 
+{
+    /*
+    Human firstHuman;        // создаём объект класса Human
+    firstHuman.age = 19;
+    firstHuman.name = "Ivanov Ivan Ivanovich";
+    firstHuman.weight = 89;
+
+    cout << firstHuman.age << endl;
+    cout << firstHuman.name << endl;
+    cout << firstHuman.weight << endl;
+
+    cout << "_________________________________" << endl;
+    Human secondHuman;
+    secondHuman.age = 30;
+    secondHuman.name = "Nonanme";
+    secondHuman.weight = 73;
+
+    cout << secondHuman.age << endl;
+    cout << secondHuman.name << endl;
+    cout << secondHuman.weight << endl;
+    */
+    Point a;
+    a.x = 1;
+    a.y = 3;
+    a.z = 5;
+
+    return 0;
+}
+
+
+###### Урок #74 - Методы класса. Что такое методы в программировании. Вызов метода класса. Функции. C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+class Human          
+{
+public:              
+    int age;         
+    int weight;
+    string name;
+
+    void Print()
+    {
+        cout << "Имя\t" << name << "\nВес\t" << weight << "\nВозраст\t" << age << endl << endl;
+    }
+};
+
+class Point
+{
+public:
+    int x;
+    int y;
+    int z;
+};
+
+int main() 
+{
+    setlocale(LC_ALL, "ru");
+
+    Human firstHuman;
+    firstHuman.age = 30;
+    firstHuman.name = "Ivanov Ivan";
+    firstHuman.weight = 100;
+    firstHuman.Print();
+    
+    Human secondHuman;
+    secondHuman.age = 19;
+    secondHuman.name = "Tolya";
+    secondHuman.weight = 60;
+    secondHuman.Print();
+    return 0;
+}
+
+
+###### Урок #75 - Модификаторы доступа классов. public private protected что это. Спецификаторы доступа. C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+class Human          
+{
+public:              
+    int age;         
+    int weight;
+    string name;
+
+    void Print()
+    {
+        cout << "Имя\t" << name << "\nВес\t" << weight << "\nВозраст\t" << age << endl << endl;
+    }
+};
+
+class Point
+{
+private:                        // private - модификатор доступа по умолчанию
+    int z;
+    void PrintY()
+    {
+        cout << "PrintY()\t" << y << endl;
+    }
+public:                         // public - доступно везде
+    int x;
+    int y;
+    void Print()
+    {
+        cout << "y = " << y << "\nx = " << x << "\nz = " << z << "\nsmth = " << smth << endl;
+        PrintY();        // private
+    }
+protected:                    // играет роль при наследовании
+    int smth;
+
+
+};
+
+int main() 
+{
+    setlocale(LC_ALL, "ru");
+
+    Point a;
+    a.x = 10;
+    a.y = 15;
+    a.Print();
+    return 0;
+}
+
+
+###### Урок #76 - Что такое геттеры и сеттеры для класса. Методы get и set. Инкапсуляция это. Пример. C++ 
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+class Human          
+{
+public:              
+    int age;         
+    int weight;
+    string name;
+
+    void Print()
+    {
+        cout << "Имя\t" << name << "\nВес\t" << weight << "\nВозраст\t" << age << endl << endl;
+    }
+};
+
+class Point
+{
+private:
+    int x;
+    int y;
+
+public:
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+    
+    void SetY(int valueY)
+    {
+        y = valueY;
+    }
+    
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl;
+    }
+};
+
+int main() 
+{
+    setlocale(LC_ALL, "ru");
+
+    Point a;
+    a.SetX(111111);
+    a.SetY(999999999);
+    a.Print();
+
+    return 0;
+}
+
+
+###### Урок #77 - Инкапсуляция ООП пример. private методы. Что такое инкапсуляция. C++ Для начинающих.
