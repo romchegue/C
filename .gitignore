@@ -3,7 +3,7 @@ temp.*
 temp.cpp
 TEST*
 # Executables
-*.exe
+#*.exe
 *.out
 *.tmp
 *.swo

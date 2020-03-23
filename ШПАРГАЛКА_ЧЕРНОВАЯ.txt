@@ -2642,3 +2642,163 @@ int main()
 
 
 ###### Урок #83 - Перегрузка операторов пример. ООП. Перегрузка оператора присваивания. C++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+class MyClass
+{  
+public:
+    int *data;
+
+    MyClass(int size)
+    {
+        this->Size = size;
+        this->data = new int [size];
+
+        for (int i = 0; i < size; i++)
+        {
+            data[i] = i;
+        }
+
+        cout << "Called constructor " << this << endl;
+    }
+    
+    MyClass(const MyClass &other)
+    {
+        this->Size = other.Size;
+        
+        this->data = new int [other.Size];
+
+        for (int i = 0; i < other.Size; i++)
+        {
+            this->data[i] = other.data[i];
+        }
+
+        cout << "Called copy constructor " << this << endl;
+    }
+
+    MyClass & operator = (const MyClass &other)                           // Оператор присваивания. Возвращает ССЫЛКУ на this
+    {
+        cout << "Called operator = " << this << endl;
+
+        this->Size = other.Size;
+
+        if (this->data != nullptr)   
+        {
+            delete[] this->data;
+        }
+
+        this->data = new int[other.Size];
+
+        for (int i = 0; i < other.Size; i++)
+        {
+            this->data[i] = other.data[i];
+        }
+        
+        return *this;
+    }
+
+    ~MyClass()                                   
+    {
+        delete[] data;
+
+        cout << "Called destructor " << this << endl;
+    }
+private:
+    int Size;
+};
+
+
+int main() 
+{
+    setlocale(LC_ALL, "ru");
+
+    MyClass a(10);
+
+    MyClass b(2);
+
+    MyClass c(5);
+
+    a = b = c;           // a.operator=(b);
+
+    return 0;
+}
+
+
+###### Урок #84 - Перегрузка оператора равенства == и не равно !=. Перегрузка логических операторов сравнения
+#include <iostream>
+using namespace std;
+
+class Point
+{
+private:
+    int x;
+    int y;
+
+public:
+    Point()                                                    
+    {
+        x = 0;
+        y = 0;
+        cout << this << " - constructor" << endl;
+    }
+
+    Point(int valueX, int valueY)          
+    {
+        x = valueX;
+        y = valueY;
+        cout << this << " - constructor" << endl;
+    }
+
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+
+    void SetY(int y)
+    {
+        this->y = y;                         // this->
+    }
+
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl << endl;
+    }
+
+    bool operator == (const Point &other)             // opersator ==
+    {
+        return this->x == other.x && this->y == other.y;
+    }
+
+    bool operator != (const Point &other)            // opersator !=
+    {
+        return !(this->x == other.x && this->y == other.y);
+        // return this->x != other.x || this->y != other.y;
+    }
+};
+
+int main() 
+{
+    setlocale(LC_ALL, "ru");
+
+    Point a(15, 11);
+    Point b(15, 11);
+
+    a == b ? cout << "a == b" << endl : cout << "a != b" << endl;
+    a != b ? cout << "a != b" << endl : cout << "a == b" << endl;
+
+    return 0;
+}
+
+
+###### Урок #85 - Перегрузка оператора сложения. Перегрузка операторов пример.C++ Для начинающих.
