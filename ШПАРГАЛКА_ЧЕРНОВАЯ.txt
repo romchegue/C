@@ -2802,3 +2802,761 @@ int main()
 
 
 ###### Урок #85 - Перегрузка оператора сложения. Перегрузка операторов пример.C++ Для начинающих.
+#include <iostream>
+using namespace std;
+
+class Point
+{
+private:
+    int x;
+    int y;
+
+public:
+    Point()
+    {
+        x = 0;
+        y = 0;
+        cout << this << " - constructor" << endl;
+    }
+
+    Point(int valueX, int valueY)
+    {
+        x = valueX;
+        y = valueY;
+        cout << this << " - constructor" << endl;
+    }
+
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+
+    void SetY(int y)
+    {
+        this->y = y;                         // this->
+    }
+
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl << endl;
+    }
+
+    bool operator == (const Point& other)             // opersator ==
+    {
+        return this->x == other.x && this->y == other.y;
+    }
+
+    bool operator != (const Point& other)            // opersator !=
+    {
+        return !(this->x == other.x && this->y == other.y);
+        // return this->x != other.x || this->y != other.y;
+    }
+
+    Point operator + (const Point& other)
+    {
+        return Point(this->x + other.x, this->y + other.y);
+    }
+
+    void operator += (const Point& other)
+    {
+        this->x += other.x;
+        this->y += other.y;
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Point a(15, 11);
+    Point b(15, 11);
+    Point c;
+    c = a + b;
+    c.Print();
+    a += b;
+    a.Print();
+
+
+    return 0;
+}
+
+
+###### Урок #86 - Перегрузка инкремента и декремента. Постфиксного и префиксного. ООП перегрузка операторов. C++
+#include <iostream>
+using namespace std;
+
+class Point
+{
+private:
+    int x;
+    int y;
+
+public:
+    Point()
+    {
+        x = 0;
+        y = 0;
+        cout << this << " - constructor" << endl;
+    }
+
+    Point(int valueX, int valueY)
+    {
+        x = valueX;
+        y = valueY;
+        cout << this << " - constructor" << endl;
+    }
+
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+
+    void SetY(int y)
+    {
+        this->y = y;                         // this->
+    }
+
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl << endl;
+    }
+
+    bool operator == (const Point& other)             // opersator ==
+    {
+        return this->x == other.x && this->y == other.y;
+    }
+
+    bool operator != (const Point& other)            // opersator !=
+    {
+        return !(this->x == other.x && this->y == other.y);
+        // return this->x != other.x || this->y != other.y;
+    }
+
+    Point operator + (const Point& other)
+    {
+        return Point(this->x + other.x, this->y + other.y);
+    }
+
+    void operator += (const Point& other)
+    {
+        this->x += other.x;
+        this->y += other.y;
+        
+    }
+
+    Point& operator ++()       // ПРЕФИКСНЫЙ инкремент ++X
+    {
+        this->x++;
+        this->y++;
+        return *this;     // this - это указатель, надо его разименовать
+    }
+
+    Point& operator ++(int value)       // ПОСТФИКСНЫЙ инкремент X++. int value - для компиллятора
+    {
+        Point temp(*this);              // ЗАПОМИНАЕМ состояние thjs с помощью конструктора копирования в переменную temp
+        this->x++;                      // делаем инкремент самого объекта this
+        this->y++;
+        return temp;                    // возвращаем ПЕРВОНАЧАЛЬНОЕ состояние объекта this в виде копии - temp
+    }
+
+    Point& operator --()       // ПРЕФИКСНЫЙ декремент --X
+    {
+        this->x--;
+        this->y--;
+        return *this;     // this - это указатель, надо его разименовать
+    }
+
+    Point& operator --(int value)       // ПОСТФИКСНЫЙ декремент X--. int value - для компиллятора
+    {
+        Point temp(*this);              // ЗАПОМИНАЕМ состояние thjs с помощью конструктора копирования в переменную temp
+        this->x--;                      // делаем инкремент самого объекта this
+        this->y--;
+        return temp;                    // возвращаем ПЕРВОНАЧАЛЬНОЕ состояние объекта this в виде копии - temp
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    /*
+    Point a(15, 11);
+    Point b(15, 11);
+    Point c;
+    c = a + b;
+    c.Print();
+    a += b;
+    a.Print();
+    ++a;
+    a.Print();
+    */
+
+    Point a(1, 1);
+
+    Point b = a++;
+    a.Print();
+    b.Print();
+
+    Point c(2, 2);
+    c.Print();
+    --c;
+    c.Print();
+    Point d = c--;
+    d.Print();
+    c.Print();
+
+    return 0;
+}
+
+
+###### Урок #87 - Перегрузка оператора индексирования . Перегрузка операторов пример. C++ Для начинающих
+#include <iostream>
+using namespace std;
+
+class TestClass
+{
+public:
+    int& operator [](int index)        // ВОЗВРАЩАЕМ ПО ССЫЛКЕ. Прегрузка оператора [i]
+    {
+        return arr[index];
+    }
+private:
+    int arr[5]{ 5,44,4,987,69 };
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    TestClass a;
+    cout << a[2] << endl;
+    a[2] = 777;
+    cout << a[2] << endl;
+
+    return 0;
+}
+
+
+###### Урок #88 - Дружественные функции и классы пример. Для чего используются. Как определяются. Для двух классов
+#include <iostream>
+using namespace std;
+
+class Test;        // типа прототипа класса
+
+class Point
+{
+private:
+    int x;
+    int y;
+
+public:
+    Point()
+    {
+        x = 0;
+        y = 0;
+        cout << this << " - constructor" << endl;
+    }
+
+    Point(int valueX, int valueY)
+    {
+        x = valueX;
+        y = valueY;
+        cout << this << " - constructor" << endl;
+    }
+
+    /*
+    void SetX(int valueX)
+    {
+        x = valueX;
+    }
+
+    void SetY(int y)
+    {
+        this->y = y;                         // this->
+    }
+    */
+
+    int GetX()
+    {
+        return x;
+    }
+
+    int GetY()
+    {
+        return y;
+    }
+
+    void Print()
+    {
+        cout << "X = " << x << "\tY = " << y << endl << endl;
+    }
+
+    bool operator == (const Point& other)             // opersator ==
+    {
+        return this->x == other.x && this->y == other.y;
+    }
+
+    bool operator != (const Point& other)            // opersator !=
+    {
+        return !(this->x == other.x && this->y == other.y);
+        // return this->x != other.x || this->y != other.y;
+    }
+
+    Point operator + (const Point& other)
+    {
+        return Point(this->x + other.x, this->y + other.y);
+    }
+
+    void operator += (const Point& other)
+    {
+        this->x += other.x;
+        this->y += other.y;
+        
+    }
+
+    Point& operator ++()       // ПРЕФИКСНЫЙ инкремент ++X
+    {
+        this->x++;
+        this->y++;
+        return *this;     // this - это указатель, надо его разименовать
+    }
+
+    Point& operator ++(int value)       // ПОСТФИКСНЫЙ инкремент X++. int value - для компиллятора
+    {
+        Point temp(*this);              // ЗАПОМИНАЕМ состояние thjs с помощью конструктора копирования в переменную temp
+        this->x++;                      // делаем инкремент самого объекта this
+        this->y++;
+        return temp;                    // возвращаем ПЕРВОНАЧАЛЬНОЕ состояние объекта this в виде копии - temp
+    }
+
+    Point& operator --()       // ПРЕФИКСНЫЙ декремент --X
+    {
+        this->x--;
+        this->y--;
+        return *this;     // this - это указатель, надо его разименовать
+    }
+
+    Point& operator --(int value)       // ПОСТФИКСНЫЙ декремент X--. int value - для компиллятора
+    {
+        Point temp(*this);              // ЗАПОМИНАЕМ состояние thjs с помощью конструктора копирования в переменную temp
+        this->x--;                      // делаем инкремент самого объекта this
+        this->y--;
+        return temp;                    // возвращаем ПЕРВОНАЧАЛЬНОЕ состояние объекта this в виде копии - temp
+    }
+
+    friend void ChangeX(Point& value, Test& testValue);    // ключевое слово friend. НЕ ЗАВИСИТ ОТ МОДИФИКАТОРОВ ДОСТУПА!!!
+};
+
+
+class Test
+{
+private:
+    int Data = 0;
+
+    friend void ChangeX(Point& value, Test& testValue);
+};
+
+
+void ChangeX(Point& value, Test &testValue)
+{
+    value.x = -1;
+    testValue.Data = -1;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Test test;
+    Point a(5, 12);
+    a.Print();
+    ChangeX(a, test);
+    a.Print();
+    return 0;
+}
+
+
+###### Урок #89 - Определение методов вне класса. Вынести функцию в из класса. Вынести описание метода вне класса.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class MyClass
+{
+public:
+    MyClass();
+    ~MyClass();
+    void PrintMesage();
+
+private:
+
+};
+
+MyClass::MyClass()
+{
+}
+
+MyClass::~MyClass()
+{
+}
+
+void MyClass::PrintMesage()
+{
+    cout << "HELLO!" << endl;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    MyClass a;
+    a.PrintMesage();
+    
+    return 0;
+}
+
+
+###### Урок #90 - Дружественный метод класса. ООП. friend c++ что это. Функции друзья. C++ Для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Apple;
+class Human;
+
+class Human
+{
+public:
+    void TakeApple(Apple& apple);
+};
+
+class Apple
+{
+public:
+    Apple(int weight, string color)
+    {
+        this->weight = weight;
+        this->color = color;
+    }
+
+private:
+    int weight;
+    string color;
+
+    friend void Human::TakeApple(Apple& apple);
+};
+
+void Human::TakeApple(Apple& apple)                           // метод вынести пришлось отдельно, чтобы он стал дружественным
+{
+    cout << "I took a " << apple.color << " apple with weght " << apple.weight << "g" << endl;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Apple a(150, "red");
+    Human man1;
+    man1.TakeApple(a);
+    return 0;
+}
+
+
+###### Урок #91 - Дружественные классы. ООП. friend class. friend c++ что это. C++ Для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Apple;
+class Human;
+
+class Human
+{
+public:
+    void TakeApple(Apple& apple);
+
+    void EatApple(Apple& apple)
+    {
+        
+    }
+};
+
+class Apple
+{
+public:
+    Apple(int weight, string color)
+    {
+        this->weight = weight;
+        this->color = color;
+    }
+
+private:
+    int weight;
+    string color;
+
+    friend Human;
+};
+
+
+void Human::TakeApple(Apple &apple)              // дружественностью лучше не увлекаться (доступ к private - нарушение инкапсуляции)
+{
+    apple.color = "";
+    cout << "I took a " << apple.color << " apple with weght " << apple.weight << "g" << endl;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Apple a(150, "red");
+    Human man1;
+    man1.TakeApple(a);
+    
+    return 0;
+}
+
+
+###### Урок #92 - static что это. Статические поля класса. Инициализация. Ключевое слово static.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Apple;
+class Human;
+
+class Human
+{
+public:
+    void TakeApple(Apple& apple);
+
+    void EatApple(Apple& apple)
+    {
+        
+    }
+};
+
+class Apple
+{
+public:
+    static int Count;
+
+    Apple(int weight, string color)
+    {
+        Count++;                 // при создании объекта увеличиваем переменную Count на 1
+        this->weight = weight;
+        this->color = color;
+    }
+
+private:
+    int weight;
+    string color;
+
+    friend Human;
+};
+
+int Apple::Count = 0;           // инициализация статической переменной - ВНЕ КЛАССА
+
+
+void Human::TakeApple(Apple &apple)
+{
+    cout << "I took a " << apple.color << " apple with weght " << apple.weight << "g" << endl;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    cout << Apple::Count << endl;
+
+    Apple a1(150, "red");
+    Apple a2(250, "blue");
+    Apple a3(170, "yellow");
+    Apple a4(160, "green");
+
+    cout << a1.Count << endl;
+    cout << a2.Count << endl;
+    cout << a3.Count << endl;
+    cout << a4.Count << endl;
+    cout << Apple::Count << endl;
+    
+    return 0;
+}
+
+
+###### Домашнее задание - Написать генератор идентификаторов для объектов класса используя статическую переменную.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Human
+{
+public:
+    static int Count;
+
+    Human(string name)
+    {
+        this->name = name;
+        Count++;
+        id = Count;
+    }
+
+    int GetId()
+    {
+        return id;
+    }
+
+    void Print()
+    {
+        cout << "Name: " << name << "\tID: " << id << endl;
+    }
+
+private:
+    int id;
+    string name;
+};
+
+int Human::Count = 0;
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    Human usr1("Roman");
+    Human usr2("Ivan");
+    Human usr3("Roman");
+    Human usr4("Shamil");
+
+    usr1.Print();
+    cout << usr2.GetId() << endl;
+    usr3.Print();
+    usr4.Print();
+
+    return 0;
+}
+
+
+###### Урок #93 - id generator. Генератор уникальных идентификаторов с использованием static переменной Начинающим
+
+
+###### Урок #94 - Статические методы класса зачем нужны. Модификатор static. Как влияет. ООП. Для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Human
+{
+public:
+    static int Count;
+
+    Human(string name)
+    {
+        this->name = name;
+        Count++;
+        id = Count;
+    }
+
+    int GetId()
+    {
+        return id;
+    }
+
+    void Print()
+    {
+        cout << "Name: " << name << "\tID: " << id << endl;
+    }
+
+private:
+    int id;
+    string name;
+};
+
+int Human::Count = 0;
+
+class Apple
+{
+
+public:
+    
+
+    Apple(int weight, string color)
+    {
+        this->weight = weight;
+        this->color = color;
+        Count++;
+        id = Count;
+    }
+
+    int GetId()
+    {
+        return id;
+    }
+
+    static int GetCount()      // чтобы можно было получать из самого класса - Apple::GetCount()
+    {                          // статическая функция НЕ ОТНОСИТСЯ К ОБЪЕКТАМ КЛАССА - но оносится К КЛАССУ
+        return Count;          // а стат. методе можно раб. ТОЛЬКО СО СТАТИЧЕСКИМИ ПЕРЕМЕННЫМИ !!!
+    }
+
+    static void ChangeColor(Apple & apple, string color)
+    {
+        apple.color = color;
+    }
+
+private:
+    static int Count;
+    int weight;
+    string color;
+    int id;
+
+};
+
+int Apple::Count = 0;
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Apple apple(150, "Red");
+
+    apple.ChangeColor(apple, "Green");
+    Apple::ChangeColor(apple, "BLUE");
+
+    /*
+    Apple apple2(250, "Green");
+    Apple apple3(100, "Yellow");
+
+    cout << apple.GetId() << endl;
+    cout << apple2.GetId() << endl;
+    cout << apple3.GetId() << endl;
+    cout << endl << Apple::GetCount() << endl;
+    cout << apple3.GetCount() << endl;
+    */
+
+    return 0;
+}
+
+
+###### Урок #95 - 
