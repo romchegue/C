@@ -3559,4 +3559,436 @@ int main()
 }
 
 
-###### Урок #95 - 
+###### Урок #95 - Вложенные классы с++ пример. Внутренние классы. Зачем нужны. inner class. ООП.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Image
+{
+
+public:
+    int a = 0;
+    
+
+    void GetImageInfo()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            cout << "#" << i << pixels[i].GetInfo() << endl;
+        }
+    }
+
+    class Pixel                     // ведут себя как разные классы, просто один находится внутри другого
+    {                              // а видимость класса Pixel зависит от того, в какой области класса Image он находится
+    public:
+        Pixel(int r, int g, int b)
+        {
+            this->r = r;
+            this->g = g;
+            this->b = b;
+        }
+
+        string GetInfo()
+        {
+            return " Pixel: r = " + to_string(r) + " g = " + to_string(g) + " b = " + to_string(b);
+        }
+
+    private:
+        int r;
+        int g;
+        int b;
+
+    };
+
+private:
+    static const int LENGTH = 5;
+
+    Pixel pixels[LENGTH]
+    {
+        Pixel(0,4,64),
+        Pixel(4,14,10),
+        Pixel(111,4,24),
+        Pixel(244,244,14),
+        Pixel(111,179,64)
+    };
+
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    //Image a;
+   // a.GetImageInfo();
+
+    Image::Pixel pixel(100, 200, 100);
+    cout << pixel.GetInfo();
+
+    return 0;
+}
+
+
+###### Урок #96 - Массив объектов класса. Динамический. Статический. Создание Особенности. ООП C++ Для начинающих
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Pixel                     
+{                              
+public:
+    Pixel()
+    {
+        r = g = b = 0;
+    }
+    
+    Pixel(int r, int g, int b)
+    {
+        this->r = r;
+        this->g = g;
+        this->b = b;
+    }
+
+    string GetInfo()
+    {
+        return " Pixel: r = " + to_string(r) + " g = " + to_string(g) + " b = " + to_string(b);
+    }
+
+    int test = 1000;
+private:
+    int r;
+    int g;
+    int b;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    /*
+    const int LENGTH = 5;
+    
+    Pixel p(1, 2, 33);
+    Pixel arr[LENGTH]
+    {
+        Pixel(12,3,14),
+        Pixel(10,11,25),
+        Pixel(143,23,90),
+        Pixel(121,89,76),
+        Pixel(4,15,28)
+    };
+
+    arr[0] = Pixel(111,111,111);
+    cout << arr[0].GetInfo() << endl;     // можем обращаться к полям и методам объекта
+    */
+    int LENGTH = 5;
+    Pixel* arr = new Pixel[LENGTH];
+    arr[0] = Pixel(10, 11, 12);  
+    cout << arr[0].GetInfo() << endl;
+
+    delete[] arr;
+
+    return 0;
+}
+
+
+###### Урок #97 - Что такое агрегация и композиция. Отношения между классами и объектами. ООП. C++ Для начинающих
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Cap    // агрегация - жестко НЕ привязан к конкретному классу
+{
+public:
+    string GetColor()
+    {
+        return color;
+    }
+private:
+    string color = "red";
+};
+
+class Mannequin
+{
+public:
+    void InspectMannequin()
+    {
+        cout << "The cap is " << cap.GetColor() << " color." << endl;
+    }
+private:
+    Cap cap;
+};
+
+class Human
+{
+public:
+    void Think()
+    {
+        brain.Think();    // Делегирование - один шаблонов ООП - когда метод класса вызывает метод другого класса
+    }
+
+    void InspectTheCap()
+    {
+        cout << "My cap is " << cap.GetColor() << " color." << endl;
+    }
+
+private:
+
+    class Brain     // Композиция - класс мозг зависит от класса Humans
+    {
+    public:
+        void Think()
+        {
+            cout << "I think!" << endl;
+        }
+    };
+
+    Brain brain;
+    Cap cap;
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Human human;
+    human.Think();
+    human.InspectTheCap();
+
+    Mannequin m;
+    m.InspectMannequin();
+
+    return 0;
+}
+
+
+###### Урок #98 - Наследование в ООП пример. Что такое наследование. Для чего нужно наследование классов. ООП. C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Human
+{
+private:
+    string name;
+public:
+    string Getname()
+    {
+        return name;
+    }
+
+    void SetName(string name)
+    {
+        this->name = name;
+    }
+};
+
+class Student : public Human
+{
+public:
+    string group;
+
+    void Learn()
+    {
+        cout << "I learn!" << endl;
+    }
+};
+
+class ExtramuralStudent : public Student
+{
+public:
+    void Learn()
+    {
+        cout << "I visit the Institute less often than an ordinary student!" << endl;
+    }
+};
+
+class Professor : public Human
+{
+public:
+    string subject;
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    Student st;
+    st.Learn();
+    st.SetName("Robin Goood");
+    cout << st.Getname() << endl;
+
+    ExtramuralStudent extraSt;
+    extraSt.SetName("Evoly");
+    extraSt.Learn();
+    cout << extraSt.Getname() << endl;
+
+    return 0;
+}
+
+
+###### Урок #99 - Модификаторы доступа при наследовании. private public protected Спецификаторы доступа. ООП. C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class A
+{
+public:                                   // доступно всем и везде 
+    string msgOne = "Message #1";
+
+private:                                  // доступно только внутри класса, в котором создано
+    string msgTwo = "Message #2";
+
+protected:                               // доступно на уровне класса-наследника, но НЕДОСТУПНО на уровне объектов класса
+    string msgThree = "Message #3";
+};
+
+class B : public A    // класс B имеет все поля класса A, но доступ имеет не ко всем
+{
+public:    
+    void PrintMsg()
+    {
+        cout << msgOne << endl;
+        cout << msgThree << endl;
+    }
+};
+
+class C : private A
+{
+public:
+    void COUT()
+    {
+        cout << PRINT.msgOne << endl;
+    }
+private:
+    A PRINT;
+};
+
+class D : protected A
+{
+public:
+    void COUT()
+    {
+        cout << PR.msgOne << endl;
+    }
+private:
+    A PR;
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    B b;
+    //b.PrintMsg();
+    C c;
+    c.COUT();
+    D d;
+    d.COUT();
+
+    return 0;
+}
+
+
+###### Урок #100 - Порядок вызова конструкторов при наследовании. Как вызываются конструкторы. ООП C++ Начинающим
+#include <iostream>
+#include <string>
+using namespace std;
+
+class A
+{
+public:                                   
+    A()
+    {
+        cout << "Called a constructor of class A." << endl;
+    }
+
+};
+
+class B : public A
+{
+public:    
+    B()
+    {
+        cout << "Called a constructor of class B." << endl;
+    }
+};
+
+class C : public B
+{
+public:
+    C()
+    {
+        cout << "Called a constructor of class C." << endl;
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    C c;   // для создания объекта класса С создаются объекты классво В и С (через конструктор классов)
+
+    return 0;
+}
+
+
+###### Урок #101 - Порядок вызова деструкторов при наследовании. Деструкторы. ООП C++ Для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class A
+{
+public:                                   
+    A()
+    {
+        cout << "Called a constructor of class A." << endl;
+    }
+
+    ~A()
+    {
+        cout << "Called a destructor of class A." << endl;
+    }
+};
+
+class B : public A
+{
+public:    
+    B()
+    {
+        cout << "Called a constructor of class B." << endl;
+    }
+
+    ~B()
+    {
+        cout << "Called a destructor of class B." << endl;
+    }
+};
+
+class C : public B
+{
+public:
+    C()
+    {
+        cout << "Called a constructor of class C." << endl;
+    }
+
+    ~C()
+    {
+        cout << "Called a destructor of class C." << endl;
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    C c;   
+
+    return 0;
+}        // деструкторы вызываются в обратном порядке, аналогично матрёшке или пирамидке
+
+
+###### Урок #102 - Вызов конструктора базового класса из конструктора класса-наследника. Наследование. ООП C++
