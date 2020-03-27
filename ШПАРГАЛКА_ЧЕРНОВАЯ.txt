@@ -3992,3 +3992,58 @@ int main()
 
 
 ###### Урок #102 - Вызов конструктора базового класса из конструктора класса-наследника. Наследование. ООП C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class A
+{
+public:
+    A()
+    {
+        msg = "Empty message";
+    }
+
+    A(string msg)
+    {
+        this->msg = msg;
+    }
+
+    A(string msg, int value)
+    {
+        this->msg = msg;
+    }
+
+    void PrintMsg()
+    {
+        cout << msg << endl;
+    }
+private:
+    string msg;
+};
+
+class B : public A
+{
+public:
+    B():A("Our new message.", 10)    // указываем конкретный контсруктор ( по умолчанию - A() )
+    {
+
+    }
+
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    //A a("OUR STRING");
+    //a.PrintMsg();
+
+    B value;
+    value.PrintMsg();
+
+    return 0;
+}
+
+
+###### Урок #103 - 
