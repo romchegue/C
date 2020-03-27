@@ -4046,4 +4046,62 @@ int main()
 }
 
 
-###### ”рок #103 - 
+###### ”рок #103 - ¬иртуальные методы класса c++.  лючевое слово virtual.  лючевое слово override. ќќѕ. C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Gun
+{
+public:
+    virtual void Shoot()    // virtual - позвол€ет ѕ≈–≈ќѕ–≈ƒ≈Ћя“№ данный метод, чтобы, спользу€ лишь ” ј«ј“≈Ћ№ на Ѕј«ќ¬џ…
+    {                       // класс мен€ть поведение классов-наследников
+        cout << "BANG!" << endl;
+    }
+};
+
+class Bazooka : public Gun
+{
+public:
+    void Shoot() override   // слово override нужно дл€ того, чтобы  ќћѕ»ЋЋя“ќ– контроллирвоал правильность переопределени€         
+    {
+        cout << "BADABOOM!" << endl;
+    }
+};
+
+class SubmachineGun : public Gun
+{
+public:
+    void Shoot() override   // слово override нужно дл€ того, чтобы  ќћѕ»ЋЋя“ќ– контроллирвоал правильность переопределени€         
+    {
+        cout << "BANG! BANG! BANG!" << endl;
+    }
+};
+
+class Player
+{
+public:
+    void Shoot(Gun *gun)
+    {
+        gun->Shoot();
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    Gun gun;
+    SubmachineGun machinegun;
+    Bazooka bazooka;
+    Gun *weapon = &gun;
+    Gun *weapon = &machinegun;  // указатель может указ. на объект класса Gun и на любой объект дочерних классов
+    weapon->Shoot();
+
+    Player player;
+    player.Shoot(&bazooka);
+
+    return 0;
+}
+
+
+###### ”рок #104 - јбстрактный класс с++ пример. „исто виртуальна€ функци€. virtual. override. ѕолиморфизм ќќѕ C++
