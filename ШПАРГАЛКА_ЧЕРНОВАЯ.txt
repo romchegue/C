@@ -4105,3 +4105,212 @@ int main()
 
 
 ###### Урок #104 - Абстрактный класс с++ пример. Чисто виртуальная функция. virtual. override. Полиморфизм ООП C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Weapon         // абстрактный класс - хоть 1 методя явл. чистой виртуальной ф-ей.
+{                    // НЕЛЬЗЯ создавать объекты (экземпляры) чисто виртуального класса
+public:    
+    virtual void Shoot() = 0;       // указание чсито вирутальной функции
+    
+    void Foo()                  // обычный метод у абстрактного класса
+    {
+        cout << "Foo()" << endl;
+    }
+
+};
+
+
+class Gun : public Weapon
+{
+public:
+    virtual void Shoot()    
+    { 
+        cout << "BANG!" << endl;
+    }
+};
+
+class Bazooka : public Weapon
+{
+public:
+    void Shoot() override         
+    {
+        cout << "BADABOOM!" << endl;
+    }
+};
+
+class SubmachineGun : public Gun
+{
+public:
+    void Shoot() override        
+    {
+        cout << "BANG! BANG! BANG!" << endl;
+    }
+};
+
+class Knife : public Weapon
+{
+public:
+    void Shoot() override       // необходимо РЕАЛИЗОВАТЬ чисто виртуальный метод абстрактного класса, 
+    {                           // иначе не поулчится созд. объекты данного класса 
+        cout << "VJUH!!!" << endl;
+    }
+};
+
+class Player
+{
+public:
+    void Shoot(Weapon *weapon)
+    {
+        weapon->Shoot();
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    //Bazooka bazooka;
+    Knife knife;
+
+    Player player;
+    player.Shoot(&knife);
+    
+    knife.Foo();
+
+    return 0;
+}
+
+
+###### Урок #105 - Виртуальный деструктор класса C++. Что это такое. Наследование. Полиморфизм. Для начинающих
+#include <iostream>
+#include <string>
+using namespace std;
+
+class A
+{
+public:
+    A()
+    {
+        cout << "Выделена динамическая память, объект класса А" << endl;
+    }
+
+    virtual ~A()
+    {
+        cout << "Освобождена динамическая память, объект класса А" << endl;
+    }
+};
+
+class B : public A   // объект класса В фактически содержит объект класса А, чтобы можно было пользоваться его методами и полями 
+{
+public:
+    B()
+    {
+        cout << "Выделена динамическая память, объект класса B" << endl;
+    }
+
+    ~B() override
+    {
+        cout << "Освобождена динамическая память, объект класса B" << endl;
+    }
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    //B* bptr = new B;
+    A* bptr = new B;     // указатель на базовый класс (А) может хранить ссылки на любых своих потомков
+    delete bptr;     
+
+    return 0;
+}
+
+
+###### Урок #106 - Чисто виртуальный деструктор c++. Наследование. Полиморфизм. virtual. override. Для начинающих
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+
+class A
+{
+public:
+    A()
+    {
+        
+    }
+    virtual ~A() = 0;
+};
+
+A::~A(){};
+
+class B : public A   
+{
+public:
+    B()
+    {
+        cout << "Выделена динамическая память, объект класса B" << endl;
+    }
+    ~B() override
+    {
+        cout << "Освобождена динамическая память, объект класса B" << endl;
+    }
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    A* bptr = new B;     
+    delete bptr;     
+
+    return 0;
+}
+
+
+###### Урок #107 - Делегирующие конструкторы c++. Вызов конструктора из конструктора. ООП. С++ Для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Human
+{
+public:
+    Human(string Name)
+    {
+        this->Name = Name;
+        this->Age = 0;
+        this->Weight = 0;
+    }
+
+    Human(string Name, int Age) : Human(Name)
+    {
+        this->Age = Age;
+    }
+
+    Human(string Name, int Age, int Weight) : Human(Name, Age)
+    {
+        this->Weight = Weight;
+    }
+
+private:
+    string Name;
+    int Age;
+    int Weight;
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Human h("Аристарх", 30, 70);
+
+    return 0;
+}
+
+
+###### Урок #108 - c++ вызов виртуального метода базового класса. ООП. Изучение с++ с нуля. Для начинающих.
