@@ -4314,3 +4314,271 @@ int main()
 
 
 ###### Урок #108 - c++ вызов виртуального метода базового класса. ООП. Изучение с++ с нуля. Для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Msg
+{
+public:
+    Msg(string msg)
+    {
+        this->msg = msg;
+    }
+
+    virtual string GetMsg()
+    {
+        return msg;
+    }
+private:
+    string msg;
+};
+
+class BraketsMsg : public Msg
+{
+public:
+    BraketsMsg(string msg) : Msg(msg)
+    {
+
+    }
+
+    string GetMsg() override
+    {
+        return "[" + ::Msg::GetMsg() + "]";   // Указываем явно - вызываем метод БАЗОВОГО класса!!! 
+    }
+};
+
+class Printer
+{
+public:
+    void Print(Msg* msg)
+    {
+        cout << msg->GetMsg() << endl;
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    BraketsMsg m("Hello!");
+    Printer p;
+    p.Print(&m);
+
+    return 0;
+}
+
+
+###### Урок #109 - Множественное наследование c++ пример. ООП. Изучение С++ с нуля для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Car
+{
+public:
+    string str = "Поле класса машина";
+
+    void Drive()
+    {
+        cout << "Я еду!" << endl;
+    }
+};
+
+class Airplain
+{
+public:
+    string str2 = "Поле класса самолёт";
+
+    void Fly()
+    {
+        cout << "Я лечу!" << endl;
+    }
+};
+
+class FlyingCar : public Car, public Airplain
+{
+
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    FlyingCar fc;
+    //fc.Drive();
+    //fc.Fly();
+    Car* ptrC = &fc;           // указатель типа БАЗОВОГО класса на КЛАСС-НАСЛЕДНИК
+    Airplain* ptrA = &fc;
+
+    return 0;
+}
+
+
+###### Урок #110 - Порядок вызова конструкторов при множественном наследовании. ООП. С++ начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Car
+{
+public:
+    Car()
+    {
+        cout << "Вызов контсруктора класса Car" << endl;
+    }
+
+    void Drive()
+    {
+        cout << "Я еду!" << endl;
+    }
+};
+
+class Airplain
+{
+public:
+    Airplain()
+    {
+        cout << "Вызов контсруктора класса Airplain" << endl;
+    }
+
+    void Fly()
+    {
+        cout << "Я лечу!" << endl;
+    }
+};
+
+class FlyingCar : public Airplain, public Car
+{
+public:
+    FlyingCar()
+    {
+        cout << "Вызов конструктора класса FlyingCar" << endl;
+    }
+    
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    FlyingCar fc;
+
+    return 0;
+}
+
+
+###### Урок #111 - Порядок вызова деструкторов при множественном наследовании. ООП. С++ начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Car
+{
+public:
+    Car()
+    {
+        cout << "Вызов конструктора класса Car" << endl;
+    }
+
+    void Drive()
+    {
+        cout << "Я еду!" << endl;
+    }
+
+    ~Car()
+    {
+        cout << "Вызов деструктора класса Car" << endl;
+    }
+};
+
+class Airplain
+{
+public:
+    Airplain()
+    {
+        cout << "Вызов конструктора класса Airplain" << endl;
+    }
+
+    void Fly()
+    {
+        cout << "Я лечу!" << endl;
+    }
+
+    ~Airplain()
+    {
+        cout << "Вызов деструктора класса Airplain" << endl;
+    }
+};
+
+class FlyingCar : public Car, public Airplain
+{
+public:
+    FlyingCar()
+    {
+        cout << "Вызов конструктора класса FlyingCar" << endl;
+    }
+    
+    ~FlyingCar()
+    {
+        cout << "Вызов деструктора класса FlyingCar" << endl;
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    FlyingCar fc;
+
+    return 0;
+}
+
+
+###### Урок #112 - С++ множественное наследование одинаковые методы. ООП. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Car
+{
+public:
+    void Use()
+    {
+        cout << "Я еду!" << endl;
+    }
+
+};
+
+class Airplain
+{
+public:
+    void Use()
+    {
+        cout << "Я лечу!" << endl;
+    }
+
+};
+
+class FlyingCar : public Car, public Airplain
+{
+public:
+
+   
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    FlyingCar fc;
+    ((Car)fc).Use();    // приведение типов в стиле Си
+    
+    cout << endl << endl;
+    
+    ((Airplain)fc).Use();
+
+    return 0;
+}
+
+
+###### Урок #113 - Что такое интерфейс в ООП. Интерфейс c++ пример. Изучение С++ для начинающих.
