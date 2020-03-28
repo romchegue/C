@@ -4582,3 +4582,221 @@ int main()
 
 
 ###### Урок #113 - Что такое интерфейс в ООП. Интерфейс c++ пример. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+ 
+
+class IBicycle    // ИНТЕРФЕЙС - абстрактный класс, у которых ВСЕ методы - чисто вирутальные
+{
+public:
+    void virtual TwistTheWheel() = 0;
+    void virtual Ride() = 0;
+};
+
+
+class SimpleBicycle : public IBicycle   // НЕ наследуем интерфейс, а РЕАЛИЗОВЫВАЕМ ИНТЕРФЕЙС
+{
+public:
+    void TwistTheWheel() override
+    {
+        cout << "Метод TwistTheWheel() класса SimpleBicycle" << endl;
+    }
+
+    void Ride() override
+    {
+        cout << "Метод Ride() класса SimpleBicycle" << endl;
+    }
+};
+
+class SportBicycle : public IBicycle
+{
+public:
+    void TwistTheWheel() override
+    {
+        cout << "Метод TwistTheWheel() класса SportBicycle" << endl;
+    }
+
+    void Ride() override
+    {
+        cout << "Метод Ride() класса SportBicycle" << endl;
+    }
+};
+
+class Human
+{
+public:
+    void RideOn(IBicycle& bicycle)    // все классы, унаследованные от IBicycle смогут работать с методом RideOn
+    {
+        cout << "Крутим руль" << endl;
+        bicycle.TwistTheWheel();
+        cout << endl << "Поехали" << endl;
+        bicycle.Ride();
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    SimpleBicycle sb;
+    SportBicycle sportb;
+
+    Human h;
+    //h.RideOn(sb);
+    h.RideOn(sportb);
+
+    return 0;
+}
+
+
+###### Урок #114 - Виртуальное наследование c++. Ромбовидное наследование c++. Изучение С++ для начинающих.
+/*
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Component
+{
+public:
+    Component(string companyName)
+    {
+        cout << "Конструктор Component " << endl;
+        this->companyName = companyName;
+    }
+    string companyName;    // имя производителя компонентов
+};
+
+class GPU : public Component
+{
+public:
+    GPU(string companyName) : Component(companyName)
+    {
+        cout << "Конструктор GPU" << endl;
+    }
+};
+
+class Memory : public Component
+{
+public:
+    Memory(string companyName) : Component(companyName)
+    {
+        cout << "Конструктор Memory" << endl;
+    }
+};
+
+class GraphicCard : public GPU, public Memory
+{
+public:
+    GraphicCard(string GPUCompanyName, string MemoryCompanyName) : GPU(GPUCompanyName), Memory(MemoryCompanyName)
+    {
+        cout << "Конструктор GraphicCard" << endl;
+    }
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    GraphicCard gc("AMD", "Samsung");
+    
+    cout << ((GPU)gc).companyName << endl;
+    cout << ((Memory)gc).companyName << endl;
+
+    return 0;
+}
+*/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Character
+{
+public:
+    Character()
+    {
+        cout << "Constructor of class Character" << endl;
+    }
+    int HP;
+};
+
+class Orc : public virtual Character      // для РОМБОВИДНОГО/ВИРТУАЛЬНОГО наследования 
+{                                         // - чтобы базовый класс Character не дублировался
+public:
+    Orc()
+    {
+        cout << "Constructor of class Orc" << endl;
+    }
+};
+
+class Warrior : public virtual Character    // для РОМБОВИДНОГО/ВИРТУАЛЬНОГО наследования
+{                                           // - чтобы базовый класс Character не дублировался
+public:
+    Warrior()
+    {
+        cout << "Constructor of class Warrior" << endl;
+    }
+};
+
+class OrcWarrior : public Orc, public Warrior
+{
+public:
+    OrcWarrior()
+    {
+        cout << "Constructor of class OrcWarrior" << endl;
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    OrcWarrior orc;
+
+    return 0;
+}
+
+
+###### Урок #115 - Работа с файлами с++. Запись в файл. c++ ofstream. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream>      // библиотека по рпаботе с файлами
+using namespace std;
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    string path = "myFile.txt";
+    //cin >> path;
+    ofstream fout;      // создаём объект класса ofstream
+    //fout.open(path);   // метод open - перегруженный - может принимать разное количество параметров
+    fout.open(path, ofstream::app);   // app - append, то есть ДОБАВИТЬ. Добавляет данные в конец файла
+
+
+    if (!fout.is_open())
+    {
+        cout << "Ошибка открытия файла!" << endl;
+    }
+    else
+    {
+        //fout << "Это наши данные!" << endl;
+        //fout << a << endl;      // возможно для любых типов данных, у которых перегружен оператор <<
+        for (int i = 0; i < 5; i++)
+        {
+            cout << "Введите число:" << endl;
+            int a;
+            cin >> a;
+            fout << a << endl;
+        }
+    }
+
+    fout.close(); // НУЖНО ЗАКРЫТЬ ФАЙЛ!!!
+
+    return 0;
+}
+
+
+###### Урок #116 -Работа с файлами с++. Чтение из файла с++ ifstream. Изучение С++ для начинающих.
