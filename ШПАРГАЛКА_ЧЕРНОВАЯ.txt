@@ -4799,4 +4799,233 @@ int main()
 }
 
 
-###### Урок #116 -Работа с файлами с++. Чтение из файла с++ ifstream. Изучение С++ для начинающих.
+###### Урок #116 - Работа с файлами с++. Чтение из файла с++ ifstream. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream> 
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    string path = "myFile.txt";
+    
+    ifstream fin;
+    fin.open(path);    // Если нет файла, то он его просто не откроет
+
+    if (!fin.is_open())
+    {
+        cout << "Ошибка открытия файла!" << endl;
+    }
+    else
+    {
+        cout << "Файл октрыт!" << endl;
+        
+        /*
+        char str[50];
+        while (!fin.eof())    
+        {
+            fin.getline(str, 50); // метод getline класса ifstream хуже, чем std::getline, т.к. принмает обяз-но кол-во символов в строке
+                                  // и строка должна быть массивом char, а не типом string
+            cout << str << endl;
+        }
+        */
+        
+        string str;
+        while (!fin.eof())    // метод eof() возвращает true, когда считывает символ EOF (End Of File)
+        {
+            str = "";
+            getline(fin, str);    // std::getline - считывает ПОСТРОЧНО (до символа '\n')
+            fin.getline(str, 50); // метод getline класса ifstream хуже, чем std::getline, т.к. принмает обяз-но кол-во символов в строке
+                                  // и строка должна быть массивом char, а не типом string
+            cout << str << endl;
+        }
+        
+        /*
+        string str;
+        while (!fin.eof())    // метод eof() возвращает true, когда считывает символ EOF (End Of File)
+        {
+            str = "";
+            fin >> str;      // считываем из файла по строке до ПЕРВОГО пробельного символа ('\t', ' ', '\n')
+            cout << str << endl;
+        }
+
+        
+        char ch; 
+        while (fin.get(ch))       // считывает ПОСИМВОЛЬНО данные в перменную. Возвращает true, пока есть символы в файле
+        {
+            cout << ch;
+        }
+        */
+    }
+
+    fin.close();
+    /*
+    //cin >> path;
+    ofstream fout;      // создаём объект класса ofstream
+    //fout.open(path);   // метод open - перегруженный - может принимать разное количество параметров
+    fout.open(path, ofstream::app);   // app - append, то есть ДОБАВИТЬ. Добавляет данные в конец файла
+
+
+    if (!fout.is_open())
+    {
+        cout << "Ошибка открытия файла!" << endl;
+    }
+    else
+    {
+        //fout << "Это наши данные!" << endl;
+        //fout << a << endl;      // возможно для любых типов данных, у которых перегружен оператор <<
+        for (int i = 0; i < 5; i++)
+        {
+            cout << "Введите число:" << endl;
+            int a;
+            cin >> a;
+            fout << a << endl;
+        }
+    }
+
+    fout.close(); // НУЖНО ЗАКРЫТЬ ФАЙЛ!!!
+    */
+    return 0;
+}
+
+
+###### Урок #117 - Запись ОБЪЕКТА КЛАССА в файл с++. Чтение объекта из файла c++ Для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream> 
+using namespace std;
+
+class Point
+{
+public:
+    Point()
+    {
+        x = y = z = 0;
+    }
+    Point(int x, int y, int z)
+    {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
+
+    void Print()
+    {
+        cout << "X: " << x << "\tY: " << y << "\tZ: " << z << endl;
+    }
+
+    int x;
+    int y;
+    int z;
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    string path = "myFile.txt";
+
+    /*
+    Point point(414, 4244, 424);
+
+    ofstream fout;
+    fout.open(path, ofstream::app);
+
+    if (!fout.is_open())
+    {
+        cout << "Ошибка открытия файла!" << endl;
+    }
+    else
+    {
+        cout << "Файл открыт!" << endl;
+        fout.write((char*)&point, sizeof(Point));     // метод write() принимает объект для записи, приведённый к типу char
+                                                      // и размер объекта. Этот метод записывает двоичные данные 
+    }
+    fout.close();
+    */
+
+    ifstream fin;
+    fin.open(path);    // Если нет файла, то он его просто не откроет
+
+    if (!fin.is_open())
+    {
+        cout << "Ошибка открытия файла!" << endl;
+    }
+    else
+    {
+        cout << "Файл октрыт!" << endl;
+        Point pnt;
+
+        while (fin.read((char*)&pnt, sizeof(Point)))   // метод read() вернёт false, елси не считает данные
+        {
+            pnt.Print();
+        }
+    }
+    fin.close();
+
+    return 0;
+}
+
+
+###### Урок #118 - Чтение и запись в файл с++ используя класс fstream c++. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <Windows.h>
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    string path = "myFile.txt";
+
+    fstream fs;
+    fs.open(path, fstream::in | fstream::out | fstream::app); // можно комбинировать методы с помощью побитового или - '|'
+                                                             // in - чтение, out - запись, app - дозапись
+    
+    if (!fs.is_open())
+    {
+        cout << "Ошибка открытия файла!" << endl;
+    }
+    else
+    {
+        string msg;
+        int value;
+        cout << "Файл октрыт!" << endl;
+        cout << "Введите 1 для записи сообщения в файл:" << endl;
+        cout << "Введите 2 для считывания всех сообщений из файла:" << endl;
+        cin >> value;
+
+        if (value == 1)
+        {
+            cout << "Введите ваше сообщение:" << endl;
+            SetConsoleCP(1251);    // библиотека <Windows.h> принимает параметром кодировку для конкретного разбора символов 
+            cin >> msg;
+            fs << msg << "\n";
+            SetConsoleCP(866);    // 866 - кодировка по умолчанию. Нужно ВЕРНУТЬ !!!
+        }
+        
+        if (value == 2)
+        {
+            cout << "Чтение данных из файла!" << endl;
+            while (!fs.eof())
+            {
+                msg = "";
+                fs >> msg;
+                cout << msg << endl;
+            }
+        }
+    }
+
+    fs.close();
+
+    return 0;
+}
+
+
+###### Урок #119 - Потоковый ввод вывод в файл c++. Перегрузка операторов. Изучение С++ для начинающих.
