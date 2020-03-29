@@ -5029,3 +5029,85 @@ int main()
 
 
 ###### Урок #119 - Потоковый ввод вывод в файл c++. Перегрузка операторов. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <Windows.h>
+using namespace std;
+
+class Point
+{
+public:
+    Point()
+    {
+        x = y = z = 0;
+    }
+    Point(int x, int y, int z)
+    {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
+private:
+    int x;
+    int y;
+    int z;
+
+    friend ostream& operator << (ostream& os, const Point& point);   // в данном случае MSDN советует делать через дружесвтенные функции
+    friend istream& operator >> (istream& is, Point& point);
+};
+
+ostream& operator << (ostream& os, const Point& point)  // примен. везде, где исп. '<<' с объктом класса Point
+{
+    os << point.x << " " << point.y << " " << point.z;
+    return os;
+}
+
+istream& operator >> (istream& is, Point& point)  // примен. везде, где исп. '>>' с объктом класса Point
+{
+    is >> point.x >> point.y >> point.z;
+    return is;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    string path = "myFile.txt";
+
+    Point point(212, 7, 44);
+
+    // cout << point;
+
+    fstream fs;
+    fs.open(path, fstream::in | fstream::out | fstream::app); 
+    
+    if (!fs.is_open())
+    {
+        cout << "Ошибка открытия файла!" << endl;
+    }
+    else
+    {
+        cout << "Файл октрыт!" << endl;
+       // fs << point << "\n";
+
+        
+        while (true)    // можем не делать проверку на конец файла, так как делаем это внутри цикла с пом. if
+        {
+            Point p;
+            fs >> p;
+            if (fs.eof())     // чтобы избежать записи пустого объекта Point
+            {
+                break;
+            }
+            cout << p << endl;
+        }
+    }
+
+    fs.close();
+
+    return 0;
+}
+
+
+###### Урок #120 - С++ try catch. Обработка исключений С++. try catch что это. Изучение С++ для начинающих. 
