@@ -5111,3 +5111,507 @@ int main()
 
 
 ###### Урок #120 - С++ try catch. Обработка исключений С++. try catch что это. Изучение С++ для начинающих. 
+#include <iostream>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    string path = "myFile.txrt";
+
+    ifstream fin;
+    fin.exceptions(ifstream::badbit | ifstream::failbit);  // ОБЯЗАТЕЛЬНО - для корректной работы с исключениями при работе с классом ifstream
+
+    try
+    {
+        cout << "Попытка открыть файл!" << endl;
+        fin.open(path);
+        cout << "Файл успешно открыт!" << endl;
+    }
+    //catch (const std::exception& ex)              // пойманное исключение
+    catch (const ifstream::failure &ex)
+    {
+        cout << ex.what() << endl;
+        cout << ex.code() << endl;
+        cout << "Ошибка открытия файла!" << endl;
+    }
+
+
+    fin.close();
+
+    return 0;
+}
+
+
+###### Урок #121 - Генерация исключений с++ пример. throw c++ пример. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+
+void Foo(int value)
+{
+    if (value < 0)
+    {
+        //throw value;
+        //throw "Число меньше 0 !!!";
+        throw exception("Число меньше 0 !!!");       // BEST PRATICE
+    }
+   
+    cout << "Переменная = " << value << endl;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    try
+    {
+        Foo(-55);
+    }
+    //catch (const int ex)     // то, что ловит блок catch должно по типу данных соответсвтовать тому, что мы бросаем!
+    //catch (const char *ex)
+    catch (const exception &ex)
+    {
+        cout << "Мы поймали " << ex.what() << endl;
+    }
+
+    return 0;
+}
+
+
+###### Урок #122 - Несколько блоков catch. Обработка исключений С++. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+
+void Foo(int value)
+{
+    if (value < 0)
+    {
+        //throw exception("Число меньше 0 !!!");
+        throw "Число меньше 0 !!!";
+    }
+    
+    if (value==0)
+    {
+        throw exception("Число равно 0 !!!");
+    }
+
+    if (value == 1)
+    {
+        throw 1;
+    }
+
+    cout << "Переменная = " << value << endl;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    try
+    {
+        Foo(1);
+    }
+    catch (const exception &ex)      
+    {
+        cout << "БЛОК 1 - Мы поймали " << ex.what() << endl;
+    }
+    catch (const char *ex)
+    {
+        cout << "БЛОК 2 - Мы поймали " << ex << endl;
+    }
+    catch (...)     // сюда подойдёт всё, что угодно. ПОРЯДОК блоков catch имеет значение!!!
+    {
+        cout << "Что-то пошло не так!" << endl;
+    }
+
+    return 0;
+}
+
+
+###### Урок #123 - Свой класс exception c++. Создание собственного класса исключений. С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+class MyException : public exception
+{
+public:
+    MyException(const char *msg, int dataState) : exception(msg)
+    {
+        this->dataState = dataState;
+    }
+
+    int GetDataState() { return dataState; }
+private:
+    int dataState;
+};
+
+
+void Foo(int value)
+{
+    if (value < 0)
+    {
+        throw exception("Число меньше 0 !!!");
+    }
+
+    if (value == 1)
+    {
+        throw MyException("Число равно 1 !!!", value);
+    }
+
+    cout << "Переменная = " << value << endl;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    try
+    {
+        Foo(1);
+    }
+    /*
+    catch (exception& ex)
+    {
+        cout << "БЛОК 2 - Мы поймали " << ex.what() << endl;
+    }
+    */
+    catch (MyException &ex)     // сначала указываем БОЛЕЕ КОНКРЕТНЫЕ исключения 
+    {
+        cout << "БЛОК 1 - Мы поймали " << ex.what() << endl;
+        cout << "Состояние даных: " << ex.GetDataState() << endl;
+    }
+    catch (exception& ex)
+    {
+        cout << "БЛОК 2 - Мы поймали " << ex.what() << endl;
+    }
+
+    return 0;
+}
+
+
+###### Урок #124 - Перечисляемый тип enum С++. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+
+class PC
+{
+public:
+    enum PCState    // enum - набор констант (для удобства)
+    {
+        OFF,
+        ON,
+        SLEEP
+    };
+
+    PCState GetState() { return State; }
+    void SetState(PCState State) { this->State = State; }
+private:
+    PCState State;
+};
+
+
+enum Speed
+{
+    MIN=150,
+    RECOMMEND=600,
+    MAX=800
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    Speed sp = Speed::MAX;
+    cout << sp << endl;
+
+    /*
+    PC pc;
+    pc.SetState(PC::PCState::ON);
+        
+    if (pc.GetState() == PC::PCState::ON ) { cout << "PC работает!" << endl; }
+        
+    switch (pc.GetState())
+    {
+    case PC::PCState::OFF:
+        cout << "Выключен!" << endl;
+        break;
+    case PC::PCState::ON:
+        cout << "Работает!" << endl;
+        break;
+    case PC::PCState::SLEEP:
+        cout << "Спит!" << endl;
+        break;
+    }
+    */
+    return 0;
+}
+
+
+###### Урок #125 - Пространства имен с++. namespace c++ что это. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+namespace firstNS
+{
+    void Foo()
+    {
+        cout << "firstNS::Foo()" << endl;
+    }
+
+    int a;
+
+    class Point
+    {
+    };
+}
+
+namespace secondNS
+{
+    void Foo()
+    {
+        cout << "secondNS::Foo()" << endl;
+    }
+}
+
+namespace secondNS
+{
+    void Foo2()
+    {
+        cout << "secondNS::Foo2()" << endl;
+    }
+
+    int b;
+
+    class Point
+    {
+    };
+}
+
+namespace thirdNS
+{
+    namespace firstNS
+    {
+        void Foo()
+        {
+            cout << "thirdNS::firstNS::Foo()" << endl;
+        }
+    }
+}
+
+using namespace secondNS;
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    /*
+    firstNS::Foo();
+    secondNS::Foo();
+    secondNS::Foo2();
+    thirdNS::firstNS::Foo();
+    */
+    Foo();    // secondNS::Foo() --- using namespace secondNS;
+    firstNS::a;
+
+    return 0;
+}
+
+
+###### Урок #126 - Шаблоны классов с++ примеры. Обобщенные классы. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Point
+{
+public:
+    Point()
+    {
+        x = y = z = 0;
+    }
+    Point(int x, int y, int z)
+    {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
+private:
+    int x;
+    int y;
+    int z;
+};
+
+
+  
+template<typename T>     // тип данных T (???) мы узнаем в момент создания класса 
+// template<class T>     // то же самое
+class MyClass
+{
+public:
+    MyClass(T value)
+    {
+        this->value = value;
+    }
+
+    void DataTypeSize()
+    {
+        cout << sizeof(value) << endl;
+    }
+    
+    T Foo()
+    {
+        return value;
+    }
+    
+private:
+    T value;
+    T value2;
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    
+    int a = 777;
+    MyClass<int> c(a); 
+    // double a = 5.2637;
+    // MyClass<double> c(a);
+    //MyClass<Point> c(a);       // в скобках <> указывается обобщенный тип
+    
+    c.DataTypeSize();
+    int b = c.Foo();
+    cout << b << endl;
+
+    return 0;
+}
+
+//================================================================================
+
+/*
+template<typename T1, typename T2>  // тип данных T (???) мы узнаем в момент создания класса 
+class MyClass
+{
+public:
+    MyClass(T1 value, T2 value2)
+    {
+        this->value = value;
+        this->value2 = value2;
+    }
+
+    void DataTypeSize()
+    {
+        cout << "value:\t" << sizeof(value) << endl;
+        cout << "value2:\t" << sizeof(value2) << endl;
+    }
+
+private:
+    T1 value;
+    T2 value2;
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+
+    int a = 777;
+    int A = 111;
+    Point p;
+    //MyClass<int, Point> c(a, p);
+    MyClass<int, int> c(a, A);
+
+    c.DataTypeSize();
+
+    return 0;
+}
+*/
+
+
+###### Урок #127 - Наследование шаблонных классов. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Point
+{
+public:
+    Point()
+    {
+        x = y = z = 0;
+    }
+    Point(int x, int y, int z)
+    {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
+private:
+    int x;
+    int y;
+    int z;
+};
+
+  
+template<class T1>
+class TypeSize
+{
+public:
+    TypeSize(T1 value)
+    {
+        this->value = value;
+    }
+
+    void DataTypeSize()
+    {
+        cout << sizeof(value) << endl;
+    }
+
+private:
+    T1 value;
+};
+
+
+template <class T1>           // новый шаблон
+class TypeInfo : public TypeSize<T1>   // пример ещё: class TypeInfo : public TypeSize<int>
+{
+public:
+    TypeInfo(T1 value):TypeSize<T1>(value)
+    {
+    }
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    int a = 2;
+
+    TypeInfo<int> c(a);
+    c.DataTypeSize();
+
+    return 0;
+}
+
+### ЭТО НЕ ВЕСЬ УРОК!!!^^^
