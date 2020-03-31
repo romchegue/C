@@ -1,0 +1,232 @@
+###### ПРЕДЫДУЩИЕ УРОКИ - в файле YouTube_SimpleCode_C++_part1.txt
+
+###### Урок #129 - Структуры в C++ | struct C++. Разница между структурой и классом. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+/*
+class MyClass
+{
+public:                     
+    int a = 10;
+
+    void Print() { cout << a << endl; }
+};
+
+
+struct MyStruct     // по умолчанию все поля и методы - public. При наследовании наследуются они как public
+{
+    MyStruct()
+    {
+        a = 0;
+    }
+    MyStruct(int a)
+    {
+        this->a = a;
+    }
+    ~MyStruct()
+    {
+    }
+
+private:
+    int a;
+    void Print() { cout << a << endl; }
+};
+*/
+
+class MyClass1
+{
+public:
+    int a = 10;
+};
+
+class MyClass2 : public MyClass1      // по умолчанию - private
+{
+};
+
+struct MyStruct1
+{
+    int a = 22;
+};
+
+struct MyStruct2 : MyStruct1
+{
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    MyClass1 m;
+    MyStruct1 ms;
+    MyClass2 m2;
+    MyStruct2 ms2;
+    
+    cout << m2.a << endl;
+    cout << ms2.a << endl;
+    //ms.Print();
+    
+    return 0;
+}
+
+
+###### Урок #130 - Умные указатели. Smart pointers. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+template<typename T>
+class SmartPointer
+{
+public:
+
+    SmartPointer(T *ptr)
+    {
+        this->ptr = ptr;
+        cout << "Constructor" << endl;
+    }
+    
+    ~SmartPointer()
+    {
+        delete ptr;
+        cout << "Destructor" << endl;
+    }
+
+    T& operator * ()    // T& - сслыка на те данные, которые хотим передавать
+    {
+        return *ptr;
+    }
+
+private:
+    T *ptr;      // тут в объекте класса будет храниться указатель
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    /*
+    int* ptr = new int(5);     // выделяем место в динамической памяти
+    delete ptr;
+    */
+    SmartPointer<int> pointer = new int(5);   // new - возвращает указатель
+    *pointer = 1638276;
+
+    cout << *pointer << endl;
+
+    return 0;
+}
+
+
+###### Урок #131 - auto_ptr | unique_ptr | shared_ptr | Умные указатели. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <memory>             // !!!
+using namespace std;
+
+
+
+template<typename T>
+class SmartPointer
+{
+public:
+
+    SmartPointer(T *ptr)
+    {
+        this->ptr = ptr;
+        cout << "Constructor" << endl;
+    }
+    
+    ~SmartPointer()
+    {
+        delete ptr;
+        cout << "Destructor" << endl;
+    }
+
+    T& operator * ()  
+    {
+        return *ptr;
+    }
+
+private:
+    T *ptr;    
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    shared_ptr<int> p1(new int(5));        // BEST PRACTICE
+    shared_ptr<int> p2(p1);
+    
+    
+    /*
+    int* p = new int(5);
+    unique_ptr<int> p1(p);
+    p1.reset();
+    p1.release();
+
+    unique_ptr<int> p1(new int(5));
+    int* p = p1.get();            // выдаёт УКАЗАТЕЛЬ в его сыром чистом виде
+    //unique_ptr<int> p2(p1);     // ERROR!!! не даст сосслаться на другой unique_ptr
+    unique_ptr<int> p2;
+    p2.swap(p1);                // АНАЛОГ: p2 = move(p1);
+    */
+    
+    //auto_ptr<int> ap1(new int(5));
+    //auto_ptr<int> ap2(ap1);
+
+    //SmartPointer<int> sp1 = new int(5); 
+    //SmartPointer<int> sp2 = sp1;      // повторный вызов деструктора вызывает ошибку!
+    
+    return 0;
+}
+
+
+###### Урок #132 - Динамический массив и умные указатели. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+#include <memory>             
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    int size;
+    cout << "Введите размер массива: ";
+    cin >> size;
+    cout << endl;
+
+    //int* arr = new int[size] { 1, 6, 44, 9, 8 };
+    //shared_ptr<int[]> ptr(arr);
+    shared_ptr<int[]> ptr(new int[size]);
+    
+    cout << "Массив заполен псевдослучайными числами:" << endl;
+    for (int i = 0; i < size; i++)
+    {
+        ptr[i] = rand() % 10;
+        cout << ptr[i] << endl;
+    }
+
+    return 0;
+}
+
+
+###### Односвязный список | Динамические структуры данных #1
+#https://youtu.be/C9FK1pHLnhI
+
+
+###### Двусвязный список | Динамические структуры данных #2
+#https://youtu.be/lQ-lPjbb9Ew
+
+
+###### Бинарное дерево. Полное понимание! Динамические структуры данных #3
+#https://youtu.be/9o_i0zzxk1s
+
+
+###### Стек как структура данных. Полное понимание! Динамические структуры данных #4
+
+
