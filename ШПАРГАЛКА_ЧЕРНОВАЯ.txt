@@ -5551,6 +5551,7 @@ int main()
 ###### Урок #127 - Наследование шаблонных классов. Изучение С++ для начинающих.
 #include <iostream>
 #include <string>
+//#include <typeinfo>
 using namespace std;
 
 class Point
@@ -5584,11 +5585,11 @@ public:
 
     void DataTypeSize()
     {
-        cout << sizeof(value) << endl;
+        cout << "value: " << sizeof(value) << endl;
     }
 
-private:
-    T1 value;
+protected:           // для реализации typeid(value) в классе TypeInfo
+    T1 value;              
 };
 
 
@@ -5598,6 +5599,12 @@ class TypeInfo : public TypeSize<T1>   // пример ещё: class TypeInfo : public Ty
 public:
     TypeInfo(T1 value):TypeSize<T1>(value)
     {
+
+    }
+
+    void ShowTypeName()
+    {
+        cout << "Название типа: " << typeid(this->value).name() << endl;
     }
 };
 
@@ -5606,12 +5613,55 @@ int main()
 {
     setlocale(LC_ALL, "ru");
     
-    int a = 2;
+    //int a = 2;
+    Point a(7, 77, 777);
 
-    TypeInfo<int> c(a);
+    TypeInfo<Point> c(a);
+    c.ShowTypeName();
     c.DataTypeSize();
 
     return 0;
 }
 
-### ЭТО НЕ ВЕСЬ УРОК!!!^^^
+
+###### Урок #128 - Специализация шаблона класса. Изучение С++ для начинающих.
+#include <iostream>
+#include <string>
+using namespace std;
+
+template <typename T>
+class Printer
+{
+public:
+    void Print(T value)
+    {
+        cout << value << endl;
+    }
+};
+
+template<>               
+class Printer<string>         // при пустом объявлении спициализации мы просто запрещаем использование шабл. ф-ии с типом string
+{
+public:
+    void Print(string value)
+    {
+        cout << "___" << value << "___" << endl;
+    }
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    Printer<string> p;
+    p.Print("Hello World!!!");
+
+    Printer<int> pp;
+    pp.Print(555);
+
+    return 0;
+}
+
+
