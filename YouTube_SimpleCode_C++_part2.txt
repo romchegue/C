@@ -508,5 +508,468 @@ int main()
 
 
 ###### Урок #135 - Реализация односвязного списка c++ Часть 3 | Урок #135
+/*
+МОЙ ВАРИАНТ РЕЛИЗАЦИИ МЕТОДОВ:
+    void push_front(T data);
+    void pop_back();
+    void insert(T value, const int index);
+    void removeAt(const int index);
+*/
+#include <iostream>
+#include <string>
+using namespace std;
+
+template<typename T>
+class List
+{
+public:
+    List();
+    ~List();
+
+    void pop_front();
+    void push_back(T data);
+    void clear();
+    void push_front(T data);
+    void pop_back();
+    void insert(T value, const int index);
+    void removeAt(const int index);
+    int GetSize(){ return Size; }
+    T& operator[](const int index);
+
+private:
+    template<typename T>
+    class Node
+    {
+    public:
+        Node* pNext;      // указатель на следующий элемент типа Node
+        T data;
+
+        Node(T data=T(), Node *pNext=nullptr)     // T() - констурктор по умолчанию (лишь бы не мусор). Последн. Node указ-ет на nullptr
+        {
+            this->data = data;
+            this->pNext = pNext;
+        }
+    };
+
+    int Size;         // кол-во элементов с списке      
+    Node<T> *head;    // указатель на первый элемент. Все элементы односвязного списка хранятся в динамической памяти
+};
+
+template<typename T>
+List<T>::List()
+{
+    Size = 0;           // список при создании пуст
+    head = nullptr;     // первого элемента ещё нет
+}
+
+template<typename T>
+List<T>::~List()
+{
+    clear();
+}
+
+template<typename T>
+void List<T>::clear()
+{
+    while (Size)
+    {
+        cout << "Вызван метод clear() для данных: " << this->head->data << endl;
+        pop_front();
+    }
+}
+
+template<typename T>
+void List<T>::insert(T value, const int index)
+{
+    if (index == 0)    // если индекс = 0, то вставляем в начало - метод push_front()
+    {
+        push_front(value);
+        return;
+    }
+    if (index == Size)    // если индекс = Size, то вставляем в конец - метод push_back()
+    {
+        push_back(value);    
+        return;
+    }
+    // при вставке в середину делаем следующее:
+    int counter = 0;
+    Node<T>* current = head;
+    Node<T>* previous = new Node<T>();
+    while (current->pNext != nullptr)
+    {
+        previous = current;
+        current = current->pNext;
+        counter++;
+        if (counter == index)
+        {
+            previous->pNext = new Node<T>(value, current);
+        }
+    }
+    Size++;
+}
+
+template<typename T>
+void List<T>::removeAt(const int index)
+{
+    if (index == 0) // если индекс = 0, то удаляем из начала - метод pop_front()
+    {
+        pop_front();
+        return;
+    }
+    if (index == Size-1)   // если индекс = Size-1, то удаляем из конца - метод pop_back()
+    {
+        pop_back();
+        return;
+    }
+    // при удалении из середины делаем следующее:
+    int counter = 0;
+    Node<T>* current = head;
+    Node<T>* previous = new Node<T>();
+    while (current->pNext != nullptr)
+    {
+        previous = current;
+        current = current->pNext;
+        counter++;
+        if (counter == index)
+        {
+            previous->pNext = current->pNext;
+            delete current;
+            break;
+        }
+    }
+    Size--;
+}
+
+template<typename T>
+void List<T>::push_front(T data)
+{
+    Node<T> *temp = new Node<T>(data, head);
+    head = temp;
+    Size++;
+}
+
+template<typename T>
+void List<T>::pop_back()
+{
+    Node<T>* current = head;
+    Node<T>* previous = new Node<T>();
+    while (current->pNext != nullptr)
+    {
+        previous = current;
+        current = current->pNext;
+    }
+    previous->pNext = nullptr;
+    delete current;
+    Size--;
+}
+
+template<typename T>
+void List<T>::pop_front()
+{
+    Node<T>* temp = head;
+    head = head->pNext;
+    delete temp;
+    Size--;
+}
+
+template<typename T>
+void List<T>::push_back(T data)      // добавить данный в конец списка = добавление элемента в конец списка
+{
+    if (head == nullptr)
+    {
+        head = new Node<T>(data);
+    }
+    else
+    {
+        Node<T>* current = this->head;     // временная переменная - для поиска последнего элемента одн. списка
+
+        while (current->pNext != nullptr)    
+        {
+            current = current->pNext;
+        }
+        current->pNext = new Node<T>(data);
+    }
+    Size++;
+}
+
+template<typename T>
+T& List<T>::operator[](const int index)
+{
+    int counter = 0;
+    Node<T>*current = this->head;
+
+    while (current != nullptr)
+    {
+        if (counter == index)
+        {
+            return current->data;
+        }
+        current = current->pNext;
+        counter++;
+    }
+}
 
 
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    List<int> lst;
+    /*
+    lst.push_back(5);
+    lst.push_back(10);
+    lst.push_back(22);
+    */
+    int numbersCount;
+    cout << "Введите размер односвязного списка: " << endl;
+    cin >> numbersCount;
+
+    for (int i = 0; i < numbersCount; i++)
+    {
+        lst.push_back(rand() % 10);
+    }
+    
+    for (int i = 0; i < numbersCount; i++)
+    {
+        cout << lst[i] << " ";
+    }
+    cout << endl;
+
+    //cout << "Выполняю метод clear()" << endl;
+    //lst.pop_front();
+    //lst.clear();
+    //lst.push_front(888);
+    //lst.pop_back();
+    lst.insert(888, 1);
+    
+    lst.removeAt(1);
+    for (int i = 0; i < lst.GetSize(); i++)
+    {
+        cout << lst[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+//################################################################
+/*
+ВАРИАНТ СЕРГЕЯ РЕЛИЗАЦИИ МЕТОДОВ:
+    void push_front(T data);
+    void pop_back();
+    void insert(T value, const int index);
+    void removeAt(const int index);
+*/
+#include <iostream>
+#include <string>
+using namespace std;
+
+template<typename T>
+class List
+{
+public:
+    List();
+    ~List();
+
+    void pop_front();
+    void push_back(T data);
+    void clear();
+    void push_front(T data);
+    void pop_back();
+    void insert(T value, const int index);
+    void removeAt(const int index);
+    int GetSize(){ return Size; }
+    T& operator[](const int index);
+
+private:
+    template<typename T>
+    class Node
+    {
+    public:
+        Node* pNext;      // указатель на следующий элемент типа Node
+        T data;
+
+        Node(T data=T(), Node *pNext=nullptr)     // T() - констурктор по умолчанию (лишь бы не мусор). Последн. Node указ-ет на nullptr
+        {
+            this->data = data;
+            this->pNext = pNext;
+        }
+    };
+
+    int Size;         // кол-во элементов с списке      
+    Node<T> *head;    // указатель на первый элемент. Все элементы односвязного списка хранятся в динамической памяти
+};
+
+template<typename T>
+List<T>::List()
+{
+    Size = 0;           // список при создании пуст
+    head = nullptr;     // первого элемента ещё нет
+}
+
+template<typename T>
+List<T>::~List()
+{
+    clear();
+}
+
+template<typename T>
+void List<T>::clear()
+{
+    while (Size)
+    {
+        pop_front();
+    }
+}
+
+template<typename T>
+void List<T>::insert(T value, const int index)
+{
+    if (index == 0)    
+    {
+        push_front(value);
+    }
+    else
+    {
+        Node<T>* previous = this->head;
+        for (int i = 0; i < index - 1; i++)
+        {
+            previous = previous->pNext;
+        }
+ 
+        previous->pNext = new Node<T>(value, previous->pNext);
+
+        Size++;
+    }
+}
+
+template<typename T>
+void List<T>::removeAt(const int index)
+{
+    if (index == 0) 
+    {
+        pop_front();
+    }
+    else
+    {
+        Node<T>* previous = this->head;
+        for (int i = 0; i < index - 1; i++)
+        {
+            previous = previous->pNext;
+        }
+        
+        Node<T>* toDelete = previous->pNext;
+        previous->pNext = toDelete->pNext;
+        delete toDelete;
+        Size--;
+    }
+}
+
+template<typename T>
+void List<T>::push_front(T data)
+{
+    head = new Node<T>(data, head);
+    Size++;
+}
+
+template<typename T>
+void List<T>::pop_back()
+{
+    removeAt(Size - 1);
+}
+
+
+template<typename T>
+void List<T>::pop_front()
+{
+    Node<T>* temp = head;
+    head = head->pNext;
+    delete temp;
+    Size--;
+}
+
+template<typename T>
+void List<T>::push_back(T data)      // добавить данный в конец списка = добавление элемента в конец списка
+{
+    if (head == nullptr)
+    {
+        head = new Node<T>(data);
+    }
+    else
+    {
+        Node<T>* current = this->head;     // временная переменная - для поиска последнего элемента одн. списка
+
+        while (current->pNext != nullptr)    
+        {
+            current = current->pNext;
+        }
+        current->pNext = new Node<T>(data);
+    }
+    Size++;
+}
+
+template<typename T>
+T& List<T>::operator[](const int index)
+{
+    int counter = 0;
+    Node<T>*current = this->head;
+
+    while (current != nullptr)
+    {
+        if (counter == index)
+        {
+            return current->data;
+        }
+        current = current->pNext;
+        counter++;
+    }
+}
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    List<int> lst;
+    /*
+    lst.push_back(5);
+    lst.push_back(10);
+    lst.push_back(22);
+    */
+    int numbersCount;
+    cout << "Введите размер односвязного списка: " << endl;
+    cin >> numbersCount;
+
+    for (int i = 0; i < numbersCount; i++)
+    {
+        lst.push_back(rand() % 10);
+    }
+    
+    for (int i = 0; i < numbersCount; i++)
+    {
+        cout << lst[i] << " ";
+    }
+    cout << endl;
+
+    //cout << "Выполняю метод clear()" << endl;
+    //lst.pop_front();
+    //lst.clear();
+    //lst.push_front(888);
+    lst.pop_back();
+    //lst.insert(888, 5);
+    //lst.removeAt(3);
+
+    for (int i = 0; i < lst.GetSize(); i++)
+    {
+        cout << lst[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+###### vector | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #1
