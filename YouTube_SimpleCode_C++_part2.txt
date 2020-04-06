@@ -973,3 +973,240 @@ int main()
 
 
 ###### vector | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #1
+#include <iostream>
+#include <vector>
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<int> myVector;
+
+    cout << "Количество элементов в векторе: " << myVector.size() << endl;
+    cout << "capacity вектора: " << myVector.capacity() << endl;  
+
+
+    /*
+    // vector<int> myVector;    // вектор - прокачанный динамический массив. Это ОБОЛОЧКА ДЛЯ ДИНАМИЧЕСКОГО МАССИВА
+    // vector<int> myVector1 = { 0,484,484,999 };        // так можно инициализировать ветор аналогично массиву
+    // vector<int> myVector(0);  // создать ветор на 20 элементов и инициализировать его 0-ми
+    // vector<int> myVector(20,55);  // создать ветор на 20 элементов и инициализировать его 55-ми
+
+    myVector[0] = 1000;
+    
+    myVector.push_back(2);
+    myVector.push_back(44);
+    myVector.push_back(77);
+    myVector.push_back(9);
+
+    cout << myVector.empty() << endl;   // првоерка - есть ли элементы в нашем векторе? true - когда НЕТ (vector<int> myVector(0))
+
+    myVector.reserve(100);    // резервируем место - выставляем capacity на 100 элементов - динамический массив на 100 элементов
+
+    myVector.capacity();  // capacity() - сколько элементов он может вместить. При доб. элем-та память выделяется с запасом
+    
+    myVector.shrink_to_fit();  // уменьшает capacity до размера кол-ва элементов - экономим динам. память
+    cout << "shrink_to_fit()" << endl;
+    cout << "Количество элементов в векторе: " << myVector.size() << endl;
+    cout << "capacity вектора: " << myVector.capacity() << endl;
+
+    myVector.pop_back();
+    //myVector.clear();
+
+    //myVector.resize(20);
+    //myVector.resize(20,888);
+
+    try
+    {
+        cout << myVector.at(10) << endl;     // аналогично myVector[1], но с запретом на выход за границы. НО! Он медленнее
+    }
+    catch (const std::out_of_range& ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    for (int i = 0; i < myVector.size(); i++)
+    {
+        cout << myVector[i] << endl;
+    }
+    */
+    return 0;
+}
+
+
+###### Итераторы STL | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #2
+#include <iostream>
+#include <vector>
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<int> myVector = { 1,9,44,422,676,78 };
+vector<int>::iterator it = myVector.begin();
+    
+    for (vector<int>::iterator i = myVector.begin(); i != myVector.end(); i++)
+    {
+        cout << *i << endl;
+    }
+
+    cout << endl << "insert " << endl << endl;
+
+
+    advance(it, 3);      // Перемещаем итератор. Аналог: myVector.insert((it + 3), 999);
+    myVector.insert(it, 999);
+
+    for (vector<int>::iterator i = myVector.begin(); i != myVector.end(); i++)
+    {
+        cout << *i << endl;
+    }
+
+    cout << endl << "erase " << endl << endl;
+
+
+    vector<int>::iterator itErase = myVector.begin();
+    
+    // advance(itErase, 3);
+    // myVector.erase(itErase);
+    myVector.erase(itErase, itErase+3);   // удалить с 0 элемента по 3-й
+
+    for (vector<int>::iterator i = myVector.begin(); i != myVector.end(); i++)
+    {
+        cout << *i << endl;
+    }
+    /*
+    advance(it, 3); // если итератор не поддерживает функционал: *(it + 3)
+    cout << *it << endl;
+
+    for (vector<int>::reverse_iterator i = myVector.rbegin(); i != myVector.rend(); i++)    //  reverse_iterator, rbegin(), rend() - справа налево
+    {
+        cout << *i << endl;
+    }
+
+    for (vector<int>::iterator i = myVector.begin(); i != myVector.end(); i++)
+    {
+        cout << *i << endl;
+    }
+
+    for (vector<int>::const_iterator i = myVector.cbegin(); i != myVector.cend(); i++)   // const_iterator, cbegin(), cend() - константные методы
+    {
+        cout << *i << endl;
+    }
+    // myVector.end() - указаывает на следующий элемент контейнера после последнего, то есть вникуда
+    // vector<int>::iterator it;    // создаём итератор it вектора с данными int
+    // it = myVector.begin();  // метод begin() возвращает итератор нужного нам типа
+    // *it = 1000;
+    // cout << *it << endl;     // разыменовываем итератор. Так же как с указателями и умными указателями   
+
+    
+    // int arr[] = { 2,6,9 };          // обычный статический массив
+    // cout << arr[1] << endl;         // доступ к элементу массива через оператор []
+    // cout << *(arr + 1) << endl;     // арифметика указателей
+    */
+
+    return 0;
+}
+
+
+###### Ключевое слово auto | Изучение С++ для начинающих. Урок #136
+#include <iostream>
+#include <vector>
+//using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    std::vector<int> myVector = { 11,46,9 };   // если не включено: using namespace std;
+
+    std::vector<int>::iterator it = myVector.begin();
+    auto it2 = myVector.begin();   // вместо std::vector<int>::iterator it2 = myVector.begin();
+
+    for (auto it = myVector.begin(); it != myVector.end(); it++)
+    {
+        std::cout << *it << std::endl;
+    }
+
+    /*
+    auto a = 10;   // С ПРОСТЫМИ ТИПАМИ ДАННЫХ ЛУЧШЕ НЕ ИСПОЛЬЗОВАТЬ auto - усложн. читабельность кода
+    auto b = 1.44;
+    auto c = "string";
+    auto d = true;
+    */
+
+    return 0;
+}
+
+
+###### LIST | STL C++ | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #3
+#include <iostream>
+#include <vector>
+#include <list>
+using namespace std;
+
+template<typename T>
+void PrintList(const list<T> &lst)
+{
+    for (auto i = lst.cbegin(); i != lst.cend(); ++i)    // префиксный инкремент !!!
+    {
+        cout << *i << endl;
+    }
+};
+
+
+template<typename T>
+void Advance(T &it, const int index)
+{   // My realisation of function advance
+    for (int i = 0; i < index; ++i)
+    {
+        ++it;
+    }
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    list<int> myList = { 15,64,979,54,99 };
+
+    list<int> myList2 = { 22,45,554 };
+    
+    PrintList(myList);
+    
+    // myList.assign(myList2.begin(), myList2.end());   // Копирование из myList2 в myList
+    // myList.assign(3, 111); // заполн. лист к.-то элем-ми (111). НО, прежде чем заполн. лист этими элем-ми, он ВСЕ предыд. элементы удаляет
+    // myList.size();
+    // myList.remove(979);    // удалить элемент номиналом 979
+    // myList.erase(it);   // удалить элемент в позиции итератора it
+
+    // auto Iter = myList.begin();
+    // Advance(Iter, 3);   // моя релизация функции advance
+    // cout << *Iter;
+
+    // ++it;     // ИТЕРАТОР ЛИСТА НЕ ПОДДЕРЖИВАЕТ ДОСТУП К ПРОИЗВОЛЬНОМУ ИНДЕКСУ, например: it += 2
+    // advance(it, 3);     // на какое количество сдвинуть итератор
+    // myList.insert(it, 111);
+    // myList.clear();
+    // myList.reverse();
+    // myList.unique();  // { 99,15,64,99,979,54,99,99,99 } ---> { 99,15,64,99,979,54,99 }
+    // myList.push_back(5);
+    // myList.push_front(151);
+    // cout << myList.size();
+    // PrintList(myList);
+    // myList.pop_back();
+    // myList.pop_front();
+    // myList.sort();
+    // auto it = myList.begin(); // list<int>::iterator it = myList.begin();
+
+    return 0;
+}
+
+
+###### Итераторы stl c++ | prefix vs postfix | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #4
