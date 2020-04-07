@@ -1215,6 +1215,15 @@ include <iostream>
 #include <list>
 using namespace std;
 
+template<typename T>
+void PrintList(const list<T> &lst)
+{
+    for (auto i = lst.cbegin(); i != lst.cend(); ++i)    // префиксный инкремент !!!
+    {
+        cout << *i << endl;
+    }
+};
+
 int main()
 {
     setlocale(LC_ALL, "ru");
@@ -1228,4 +1237,270 @@ int main()
 }
 
 
-###### 
+###### Цикл foreach C++ | range-based циклы | Изучение С++ для начинающих. Урок #137
+#include <iostream>
+#include <vector>      
+#include <list>
+using namespace std;
+
+template<typename T>
+void PrintList(const list<T>& lst)
+{   // Ф-ия печати элементов списка. Реализация через range-base цикл
+    for (const auto element : lst)                 
+    {
+        cout << element << endl;
+    }
+
+    /*
+    for (auto i = lst.cbegin(); i != lst.cend(); ++i)
+    {
+        cout << *i << endl;
+    }
+    */
+};
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    list<int> myList = { 1,99,4,94,799,44,6 };
+
+    for (const auto element : myList)
+    {
+        cout << element << endl;
+    }
+
+    cout << endl << endl;
+
+    PrintList(myList);
+
+    /*
+    int arr[] = { 5,11,94,99,44 };
+    for (auto &element : arr)     // RANGE-BASE ЦИКЛ. Удобно использовать ключевое слово auto
+    {
+        cout << element << endl;
+        element += 1;
+    }
+
+    cout << endl << endl;
+    for (const auto& element : arr)     // лучше передавать по ссылке, чтобы не копировать данные. const - не получится изменить элемент
+    {
+        cout << element << endl;
+    }
+    */
+
+    return 0;
+}
+
+
+###### forward list stl c++ | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #5
+#include <iostream>
+#include <forward_list>
+using namespace std;
+
+// FORWARD-LIST - реализация односвязного списка. Обычный LIST - двусвязного
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    forward_list<int> fl = { 131,94,494 };
+
+    forward_list<int>::iterator it = fl.begin();
+
+
+
+    cout << *it << endl << endl;
+
+    for (auto& element : fl)
+    {
+        cout << element << endl;
+    }
+
+    // auto it = fl.before_begin();      // итератор, кот. указывает на НИЧТО перед началом. Поэтому можно исп-ть insert_after() для элемента 0
+    // auto it = fl.cbefore_begin();
+    // fl.erase_after(it);
+    // forward_list<int>::iterator it = fl.begin();
+    // fl.insert_after(it, 9999);
+    // ++it;
+    // fl.push_front(1);
+
+    /*
+    for (auto &element : fl)
+    {
+        cout << element << endl;
+    }
+    */
+
+    return 0;
+}
+
+
+###### array STL C++ | | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #6
+#include <iostream>
+#include <array>
+using namespace std;
+
+// STL array - обёртка для СТАТИЧЕСКИХ массивов 
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    array<int,4> arr = { 1,94,77,9};     // в скобках <> - тип элементов и размер массива 
+    
+    for (auto element : arr)
+    {
+        cout << element << endl;
+    }
+
+    /*
+    for (int i = 0; i < arr.size(); i++)
+    {
+        cout << arr[i] << endl;
+    }
+    */
+
+    /*
+    try
+    {
+        cout << arr.at(11) << endl;
+    }
+    catch (const std::exception&ex)
+    {
+        cout << ex.what() << endl;
+    }
+    */
+
+    // arr.front();   // доступ к 0-му элементу массива
+    // arr.back();    // доступ к последнему элементу массива
+    // arr.fill(-1);    // заполнит массив значенями -1
+    // arr.size();   // не нужно хранить размер массива в отдельной переменной. Для этого есть метод size()
+    // cout << arr[0] << endl;        // не контролируется на выход за границы массива
+    // cout << arr.at(0) << endl;     // проверка на выход за границы массива
+    return 0;
+}
+
+
+###### Контейнеры STL и операторы сравнения. | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #7
+#include <iostream>
+#include <array>
+using namespace std;
+
+// При сравнении контейнеров элементы контейнера STL должны иметь возможность исп. операторы сравнения
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    array<int, 4> arr = { 1,94,77,4 };  
+    array<int, 4> arr2 = { 1,94,77,9 };
+
+    // bool result = arr < arr2;
+    bool result = arr != arr2;
+
+    cout << result << endl;
+
+    return 0;
+}
+
+
+###### deque stl c++ | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #8
+#include <iostream>
+#include <vector>
+#include <deque>
+using namespace std;
+
+// deque - гибрит ветора (~динамического массива) и листа (двусвязного списка)
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    deque<int> dq = { 1,9,94 };
+
+    deque<int>::iterator it = dq.begin();    // итератор произвольного доступа - вправо и влево можно двигаться
+    ++it;                                
+    --it;
+
+    // dq.push_front(888);
+    // dq.push_back(888);
+    // dq[0];
+    // dq.at(0);
+
+    return 0;
+}
+
+
+###### SET | MULTISET | Ассоциативные контейнеры | Библиотека стандартных шаблонов (stl) | Уроки | C++ #9
+#include <iostream>
+#include <set>
+using namespace std;
+
+// Контейнеры set и multiset основаны на бинарном дереве. Упорядоченная структура данных. Хранит уникальные значения
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    multiset<int> myMultiset = { 1,66,1,16,99,48 };   // может хранить несколько одинаковых значений
+
+    myMultiset.insert(1);
+    myMultiset.insert(1);
+    myMultiset.insert(1);
+
+    auto it1 = myMultiset.lower_bound(1);     // аналог метода find(), возвращает первый элемент со значением 1 в коллекции
+    auto it2 = myMultiset.upper_bound(1);     // возвращает итератор на следующий элемент после последнего значения 1, т.е. 16
+    auto a = myMultiset.equal_range(1);       // возвращает диапазон чисел от upper_bound(), до lower_bound(), т.е. (1, 16)
+
+
+    cout << endl << endl;
+    for (auto& item : myMultiset)
+    {
+        cout << item << endl;
+    }
+
+
+    /*
+    for (auto &item : mySet)
+    {
+        cout << item << endl;
+    }
+    */
+
+    // auto result = mySet.erase(11);   // возвращает 0 или 1 size_t - unsigned int (не может хранить отрицательные числа). 
+    // auto result2 = mySet.insert(64); // возрващает пару значений - итератор на число (добавленное или уже имеющееся), и true, если элемент удалось ставить, false - если элемент уже был добавлен 
+    // mySet.erase(11);        
+
+    /*
+    int value;
+    cin >> value;
+
+    if (mySet.find(value) != mySet.end())
+    {
+        cout << "Number " << value << " is found!" << endl;
+    }
+    else
+    {
+        cout << "Number " << value << " is not found!" << endl;
+    }
+    */
+
+    // auto it = mySet.find(10);   // метод find() возвращает итератор на найденный момент в set'е, если найдёт. Если не найдёт - вернёт итератор на mySet.end()
+    /*
+    set<int> mySet = { 1,44,6,-2,43 };
+    mySet.insert(5);            // первый элемент будет в корне дерева
+    mySet.insert(1);            // меньше 5 - в левую часть дерева
+    mySet.insert(12);           // больше 5 - в правую часть дерева
+    mySet.insert(4);
+    mySet.insert(4);
+    mySet.insert(4);
+    mySet.insert(4);
+    mySet.insert(-1);
+    */
+
+    return 0;
+}
+
+
+###### typedef c++ что это | Изучение С++ для начинающих. Урок #138
