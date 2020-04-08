@@ -1506,3 +1506,378 @@ int main()
 
 
 ###### typedef c++ что это | Изучение С++ для начинающих. Урок #138
+#include <iostream>
+#include <vector>
+typedef std::vector<int> int_vector;
+typedef std::vector<float> float_vector;
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    std::vector<int> myVector1;
+
+    int_vector myVector2;
+    
+    float_vector myVector3;
+
+    return 0;
+}
+
+
+###### MAP | MULTIMAP | Ассоциативные контейнеры | Библиотека стандартных шаблонов (stl) | Уроки | C++ #10
+#include <iostream>
+#include <string>
+#include <map>
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    multimap<string, int> myMultimap;    
+    // У типа multimap не перегружен оператор [] и метод at() !!!
+    myMultimap.emplace("Петя", 1313);
+    myMultimap.emplace("Маша", 222);
+    myMultimap.emplace("Миша", 4441);
+
+    myMultimap.emplace("Петя", 1000);    // можно добавлять повторные элементы
+
+    auto res = myMultimap.find("Петя");
+
+    for (auto element : myMultimap)
+    {
+        cout << element.first << "\t" << element.second << endl;
+    }
+    
+    /*
+    map<string, int> myMap;
+   
+    myMap.emplace("Петя", 1313);
+    myMap.emplace("Маша", 222);
+    myMap.emplace("Миша", 4441);
+
+    myMap["Петя"] = 99;     // МЕНЯЕТ значение по ключу
+    myMap["Вася"] = 9797;   // СОЗДАЁТ новый элемент
+
+    myMap.at("Петя") = 3;    // работает по ключу. Если ключа нет в map - будет вызвано ИСКЛЮЧЕНИЕ
+
+    myMap.erase("Петя");
+    */
+
+    /*
+    myMap.insert(make_pair(11, "Телефон"));   // метод insert принимает пару. Поэтому можно сделать так: make_pair(key, value)
+    myMap.insert(pair<int, string>(2, "Ноутбук"));  // метод insert принимает пару. Поэтому можно сделать руками pair<key_type, value_type>(key, value)
+    myMap.emplace(3, "Монитор");    // начиная с 11-й версии С++. Метод insert() копирует иил перемещает объект. А метод emplace() просто создаёт
+    myMap.emplace(22, "Клавиатура");
+    myMap.emplace(22, "TEST");   // Не добавит пару, елси такой ключ уже имеется в коллекции !!!
+
+    auto res = myMap.emplace(22, "TEST"); // метод emplace() возвращает пару, вторым значением которой будет true, если удалось добавить элемент
+    cout << res.second << endl;
+
+    cout << myMap[3];         // перегружен оператор []
+    */
+
+    /*
+    int key = 22;
+    auto it = myMap.find(key);    // если на находит, возвращает myMap.end()
+
+    if (it != myMap.end())
+    {
+        cout << it->first << endl;
+        cout << it->second << endl;
+    }
+    else
+    {
+        cout << "Key " << key << " is not found in the map: " << endl;
+        for (pair<int, string> element : myMap)
+        {
+            cout << element.first << "\t" << element.second << endl;
+        }
+    }
+    */
+
+    // std::pair<int, string> p(1, "телефон");     // пара с ключом типа int и занчением типа string
+    // pair<string, string> p("1111p", "телефон");  
+    // cout << p.first << endl;
+    // cout << p.second << endl;
+    // map<int, string> myMap;    // для своего типа данных в типе ключа нужно перегрузить оператор сравнения, чтобы корректно строилось бинарное дерево
+    // map<myClass, string> myMap;    // для своего типа данных в типе ключа нужно перегрузить оператор сравнения, чтобы корректно строилось бинарное дерево
+
+    return 0;
+}
+
+
+###### Многопоточность | Потоки | thread | Многопоточное программирование | Уроки | C++ #1
+#include <iostream>
+#include <thread>      // для работы с потоками
+#include <chrono>      // для работы со временем 
+using namespace std;
+
+void DoWork()
+{
+
+    for (int i = 0; i < 10; i++)
+    {
+        cout << "ID потока = " << this_thread::get_id() << "\tDoWork\t" << i << endl;
+        this_thread::sleep_for(chrono::milliseconds(1000));
+    }
+}
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    thread th(DoWork);             // передаём указатель на функцию. Имя функции = укзатель на функцию
+    // th.detach();     // отсоединит поток th после выполнения основного потока (main)
+    thread th2(DoWork);
+
+    for (int i = 0; i < 10; i++)
+    {
+        cout << "ID потока = " << this_thread::get_id() << "\tmain\t" << i << endl;
+        this_thread::sleep_for(chrono::milliseconds(500));
+    }
+
+    th.join();    // !!! БЛОКИРУЕТ ОСНОВНОЙ ПОТОК ДО ВЫПОЛНЕНИЯ ПОТОКА th !!! Вызывать нужно в том месте кода, где вы хотите дождаться выполнения потока th. Например, в конце main()
+    th2.join();
+    // thread th(DoWork);             // передаём указатель на функцию. Имя функции = укзатель на функцию
+    // th.detach();     // отсоединит поток th после выполнения основного потока (main) 
+
+    // this_thread::sleep_for(chrono::milliseconds(3000));          // приостанавливает работу текущего потока на определённое время
+    // cout << this_thread::get_id() << endl;                   // получить идентификатор потока
+    // th.join();    // !!! вызывать нужно в том месте кода, где вы хотите дождаться выполнения потока. Например, в конце main()
+
+    return 0;
+}
+
+
+###### Stack | Адаптеры контейнеров | Библиотека стандартных шаблонов (stl) | Уроки | C++ #11
+#include <iostream>
+#include <vector>
+#include <list>
+#include <deque>
+#include <stack>
+using namespace std;
+
+// Адаптеры контейнеров - ограничивают функционал контейнера в соответствии с адаптером
+// Стек даёт доступ только к последнему элементу - LIFO
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    stack<int, list<int>> st;
+    
+    st.push(2);  
+    st.push(43);
+    st.push(3);
+    st.emplace(9);
+    
+
+    while (!st.empty())     // empty() - вернёт true, когда стек будет пустым
+    {
+        cout << st.top() << endl;
+        st.pop();
+    }
+
+    /*
+    stack<int> st; 
+        
+    st.push(2);      // создаёт копию объекта и помещает объект в стек
+    st.push(43);
+    st.push(3);
+    st.emplace(9);   // создаёт объект и помещает в стек непосредственно в коллекции без копирования и перемещения
+
+    while (!st.empty())     // empty() - вернёт true, когда стек будет пустым
+    {
+        cout << st.top() << endl;
+        st.pop();
+    }
+    */
+    
+    // st.push(2);      // создаёт копию объекта и помещает объект в стек
+    // st.emplace(9);   // создаёт объект и помещает в стек непосредственно в коллекции без копирования и перемещения
+    // st.top();        // возвращает ссылку на послдений элемент. Который является первым на извлечение - по приницпу стека (LIFO)
+    // st.size();
+    // st.pop();        // извлекат последний элемент по принципо LIFO
+
+    return 0;
+}
+
+
+###### Потоки с параметрами | Многопоточное программирование | Уроки | C++ #2
+#include <iostream>
+#include <string>
+#include <thread>
+#include <chrono>
+using namespace std;
+
+void DoWork(int a, int b, string msg)
+{
+    cout << msg << endl;
+    this_thread::sleep_for(chrono::milliseconds(3000));
+    cout << "========\t" << "DoWork is STARTED\t========" << endl;
+    this_thread::sleep_for(chrono::milliseconds(5000));
+    cout << "a + b = " << a + b << endl;
+    this_thread::sleep_for(chrono::milliseconds(3000));
+    cout << "========\t" << "DoWork is STOPPED\t========" << endl;
+}
+
+
+int main()        // главный поток - поток пользовательского интерфейса - UI-thread
+{
+    setlocale(LC_ALL, "ru");
+    
+    thread th(DoWork,2,3,"Hello World!");          // типы параметров и их количество должно соответствовать тем параметрам, которые принимает функция
+
+    for (size_t i = 0; true; i++)
+    {
+        cout << "ID потока = " << this_thread::get_id() << "\tmain works\t" << i << endl;
+        this_thread::sleep_for(chrono::milliseconds(500));
+    }
+
+    th.join();
+
+    return 0;
+}
+
+
+###### queue | priority queue | Адаптеры контейнеров | Библиотека стандартных шаблонов (stl) | C++ #12
+#include <iostream>
+#include <vector>
+#include <list>
+#include <deque>
+#include <queue>
+using namespace std;
+
+
+// queue, priority_queue - адаптеры контейнеров, ограничивающий контейнер очередью - FIFO 
+// queue может работать только с list и с deque, но не с vector
+// priority_queue позволяет упорядочить данные в очереди
+// priority_queue queue может работать только с vector и с deque, но не с list
+// priority_queue - в STL элементы добавляются в очередь сразу согласно приоритету. Чем > значение, тем выше приоритет
+
+int main() 
+{
+    setlocale(LC_ALL, "ru");
+    
+    priority_queue<int> q;
+
+    q.emplace(56);
+    q.emplace(4);
+    q.emplace(7);
+    q.emplace(99);
+    
+    cout << "elements count " << q.size() << endl;
+    while (!q.empty())
+    {
+        cout << q.top() << endl;
+        q.pop();
+        cout << "elements count " << q.size() << endl;
+    }
+
+    // priority_queue<int,vector<int>> q;  
+    // q.top();       // для priority_queue - посмотреть первый элемент в очереди. Последний посмотреть не можем
+
+    // queue<int,list<int>> q;
+    // q.front();      // доступ к первому добавленному элементу в очереди
+    // q.back();       // доступ к последнему добавленному элементу в очереди - получаем ссылку на него
+    // q.push(22);     // скопировать элемент и добавить его в очередь 
+    // q.emplace(1);   // создать элемент и сразу добавить его в очередь q
+    // q.pop();        // удаляет из очереди согласано принципу FIFO
+    // q.size();
+
+    /*
+    queue<int> q2;
+
+    for (size_t i = 0; i < 10; i++)
+    {
+        q2.emplace(rand() % 10);
+    }
+    q.swap(q2);       // обмен содержимым одного адаптера с другим таким же адаптером   
+
+    while(!q.empty())
+    {
+        cout << q.front() << endl;
+        q.pop();
+    }
+    */
+
+    return 0;
+}
+
+
+###### Многофайловый проект | Изучение С++ для начинающих. Урок #139
+// ########## FILE main.cpp ##########
+#include <iostream>
+#include "Sum.h"    // двойные кавычки означают, что программа будет искать файл прямо среди файлов нашего проекта
+/*
+Подключение #include "Sum.h" означает на выходе (всё содрежимое файла Sum.h):
+#pragma once
+int Sum(int a, int b);
+*/
+#include "MyClass.h"
+using namespace std;
+using namespace myNamespace;
+
+int main() 
+{
+    setlocale(LC_ALL, "ru");
+
+    myNamespace::MyClass m;
+    char str[] = "Hello World!!!";
+    m.PrintMessage(str);    // F12 - перейти на реализацию метода
+
+    /*
+    int result = Sum(90, 15);
+    cout << result << endl;
+    */
+    return 0;
+}
+
+
+// ########## FILE Sum.h ##########
+#pragma once       // защита от повторного включения
+int Sum(int a, int b);
+
+
+// ########## FILE Sum.cpp ##########
+#include "Sum.h"
+
+int Sum(int a, int b)
+{
+    return a + b;
+}
+
+
+// ########## FILE MyClass.h ##########
+#pragma once
+#include <iostream>
+
+// В файле header описываются прототипы методов класса - чтобы было ясно, что вообще класс делает
+
+namespace myNamespace
+{
+    class MyClass
+    {
+    public:
+        void PrintMessage(char str[]);
+    };
+}
+
+
+// ########## FILE MyClass.cpp ##########
+#include "MyClass.h"
+
+namespace myNamespace 
+{ 
+    void MyClass::PrintMessage(char str[])
+    {
+        std::cout << str << std::endl;
+    }
+}
+
+
+###### Многофайловый проект | Защита от повторного включения | Изучение С++ для начинающих. Урок #140
+
