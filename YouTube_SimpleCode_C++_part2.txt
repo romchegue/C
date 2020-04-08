@@ -1209,9 +1209,9 @@ int main()
 }
 
 
-###### Итераторы stl c++ | prefix vs postfix | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #4
-include <iostream>
-#include <string>      
+###### Итераторы stl c++ | prefix vs postfix | Библиотека стандартных шаблонов (stl) | Уроки | C++ | #4     
+#include <iostream>
+#include <vector>
 #include <list>
 using namespace std;
 
@@ -1231,6 +1231,7 @@ int main()
     list<int>::iterator it;
 
     it++;    // F12 - показать перегруженную реализацию оператора
+
     ++it;
 
     return 0;
@@ -1238,6 +1239,7 @@ int main()
 
 
 ###### Цикл foreach C++ | range-based циклы | Изучение С++ для начинающих. Урок #137
+
 #include <iostream>
 #include <vector>      
 #include <list>
@@ -1504,3 +1506,4 @@ int main()
 
 
 ###### typedef c++ что это | Изучение С++ для начинающих. Урок #138
+
