@@ -1880,4 +1880,339 @@ namespace myNamespace
 
 
 ###### Многофайловый проект | Защита от повторного включения | Изучение С++ для начинающих. Урок #140
+// ########## FILE main.cpp ##########
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    return 0;
+}
+
+
+// ########## FILE Bar.h ##########
+// "#pragma once" - директива защиты от повторного включения. НО, работает не во всех компилляторах
+// Вместо директивы "#pragma once" реализовывают условную компилляцию:
+// Но лучше использовать и "#pragma once", и условную компилляцию
+
+#pragma once   
+
+#ifndef _BAR_H_   // Если НЕ определено _BAR_H_, т.е. не подключен ещё Bar.h, то выполнить тело условного оператора
+
+#define _BAR_H_
+
+#include "Foo.h"
+
+void Bar();
+
+#endif // !_BAR_H_
+
+
+// ########## FILE Bar.cpp ##########
+#include "Bar.h"
+
+void Bar()
+{
+}
+
+
+// ########## FILE Foo.h ##########
+#pragma once   // можно использовать и "#pragma once", и условную компилляцию
+
+#ifndef _FOO_H_
+
+#define _FOO_H_
+
+#include "Bar.h"
+
+void Foo();
+
+#endif // !_FOO_H_
+
+
+// ########## FILE Foo.cpp ##########
+#include "Foo.h"
+
+void Foo()
+{
+}
+
+
+###### Возврат результата из потока по ссылке | Многопоточное программирование | Уроки | C++ #3
+#include <iostream>
+#include <string>
+#include <thread>
+#include <chrono>
+using namespace std;
+
+void DoWork(int &a)
+{
+    this_thread::sleep_for(chrono::milliseconds(2000));
+
+    cout << "ID потока = " << this_thread::get_id() << " ========\tDoWork is STARTED\t========" << endl;
+
+    this_thread::sleep_for(chrono::milliseconds(5000));
+
+    a *= 2;
+
+    cout << "ID потока = " << this_thread::get_id() << " ========\tDoWork is STOPPED\t========" << endl;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    int q = 5;
+
+    thread t(DoWork, std::ref(q));        // !!! только так можно по ссылке предвать переменную в поток
+     
+    for (size_t i = 0; i < 10; i++)
+    {
+        cout << "ID потока = " << this_thread::get_id() << "\tmain works\t" << i << endl;
+        this_thread::sleep_for(chrono::milliseconds(500));
+    }
+   
+    t.join();              // основной поток ждёт поток t
+    cout << q << endl;
+
+    return 0;
+}
+
+
+###### Union | Использование в С++ | Изучение С++ для начинающих. Урок #141
+#include <iostream>
+using namespace std;
+
+// union - позволяет делить (расшаривать) одну и ту же область паямти под разные данные.
+// union выделяет под общие нужды между теми типами, что у него есть, то количество 
+// памяти, которое требуется для самой большой переменной
+
+union MyUnion
+{
+    short int a;
+    int b;
+    float c;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    
+    MyUnion u;
+
+    u.a = 5;
+    u.b = 40000;
+    u.c = 43.54;
+
+    return 0;
+}
+
+
+###### std::function | Полиморфная обёртка функции | Изучение С++ для начинающих. Урок #142
+#include <iostream>
+#include <functional>
+#include <vector>
+using namespace std;
+
+// std::function - аналогично указателям на функцию, но в формате ООП
+
+void Foo(int a)
+{
+    if (a > 10 && a < 40)
+    {
+        cout << "Foo() --> " << a << endl;
+    }
+}
+
+void Bar(int a)
+{
+    if (a % 2 == 0)
+    {
+        cout << "Bar() --> " << a << endl;
+    }
+}
+
+void Baz(int a)
+{
+    cout << "Baz()" << endl;
+}
+
+void DoWork(vector<int>& vc, vector<function<void(int)>> funcVector)    // передать коллекцию функций
+{
+    for (auto el : vc)
+    {
+        for (auto &fel : funcVector)
+        {
+            fel(el);
+        }
+    }
+}
+
+
+/*
+void DoWork(vector<int>& vc, std::function<void(int)> f)
+{
+    for (auto el : vc)
+    {
+        f(el);
+    }
+}
+*/
+
+/*
+int Sum(int a, int b)
+{
+    return a + b;
+}
+*/
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<int> vc = { 1,51,4,10,44,98,8,12,22,29,49 };
+
+    vector<function<void(int)>> fVector;
+    
+    fVector.emplace_back(Foo);
+    fVector.emplace_back(Bar);
+    fVector.emplace_back(Baz);
+
+    DoWork(vc, fVector);
+
+    /*
+    DoWork(vc, Bar);
+    cout << endl << endl;
+    DoWork(vc, Foo);
+    */
+
+    /*
+    function<void()> f;   
+    f = Foo;
+    f();
+    f = Bar;
+    f();
+    
+    function<int(int,int)> f2;
+    f2 = Sum;
+    cout << f2(90, 15) << endl;
+    */
+
+    return 0;
+}
+
+
+###### Лямбда-выражения | Лямбда функции | Анонимные функции | Изучение С++ для начинающих. Урок #143
+#include <iostream>
+#include <functional>
+#include <vector>
+using namespace std;
+
+
+
+void Foo(int a)
+{
+    if (a > 10 && a < 40)
+    {
+        cout << "Foo() --> " << a << endl;
+    }
+}
+
+void Bar(int a)
+{
+    if (a % 2 == 0)
+    {
+        cout << "Bar() --> " << a << endl;
+    }
+}
+
+void Baz(int a)
+{
+    cout << "Baz()" << endl;
+}
+
+void DoWork(vector<int>& vc, function<void(int)> func)
+{
+    for (auto el : vc)
+    {
+        func(el);
+    }
+}
+
+/*
+void DoWork(vector<int>& vc, vector<function<void(int)>> funcVector)
+{
+    for (auto el : vc)
+    {
+        for (auto &fel : funcVector)
+        {
+            fel(el);
+        }
+    }
+}
+*/
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    auto f = [](int a, int b)    // тип функции определяется типом возвращаемого значения автоматически !!!
+    {
+        return a + b;    // тип функции определяется типом возвращаемого значения автоматически !!!
+        // return 1.;
+        // return true;
+    };
+
+    auto q = f(2, 5);
+
+    /*
+    int p = 0;
+
+    auto f = [&p]()      // начиная с 14-й версии C++ можно использовать auto, а не только function<void(int)>
+    {                 
+        p = 5;
+    };
+
+    f();
+    */
+
+    /*
+    [&p](int a)    // lambda-функция изолирована от всего внешнего контекста. [] позволяют использовать то, 
+    {                       // что РЯДОМ с lambda-функцией, то есть это оператор захвата из внешнего контекста
+        p = 5;
+    };
+    */
+
+
+    /*
+    function<void(int)> f;
+
+    f = [](int a) 
+    {
+        cout << "Вызвана анонимная функция с параметром - " << a << endl;
+    };
+    */
+
+    /*
+    vector<int> vc = { 1,51,4,10,44,98,8,12,22,29,49 };
+    DoWork(vc, [](int a){ cout << "Вызвана анонимная функция с параметром - " << a << endl; });
+
+    DoWork(vc, [](int a)
+        {
+            if (a % 2 == 0)
+            {
+                cout << "lambda --> " << a << endl;
+            }
+        });
+    */
+
+    return 0;
+}
+
+
+###### Лямбда выражения и возврат результата выполнения потока | Многопоточное программирование | C++ #4
 
