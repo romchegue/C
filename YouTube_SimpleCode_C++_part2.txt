@@ -2215,4 +2215,381 @@ int main()
 
 
 ###### Лямбда выражения и возврат результата выполнения потока | Многопоточное программирование | C++ #4
+#include <iostream>
+#include <chrono>
+#include <thread>
+using namespace std;
+
+int Sum(int a, int b)
+{
+    this_thread::sleep_for(chrono::milliseconds(2000));
+
+    cout << "ID потока = " << this_thread::get_id() << " ========\tSum STARTED\t========" << endl;
+
+    this_thread::sleep_for(chrono::milliseconds(5000));
+
+    cout << "ID потока = " << this_thread::get_id() << " ========\tSum STOPPED\t========" << endl;
+
+    return a + b;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    int result;
+    // thread t([&result](int a, int b) { result = a + b; }, 2, 5);
+    thread t([&result]() { result = Sum(2, 5); });
+    
+    for (size_t i = 1; i <= 10; i++)
+    {
+        cout << "ID потока = " << this_thread::get_id() << "\tmain works\t" << i << endl;
+        this_thread::sleep_for(chrono::milliseconds(500));
+    }
+
+    t.join();
+
+    cout << "Sum results = " << result << endl;
+
+    return 0;
+}
+
+
+###### Захват контекста лямбдой | Лямбда функции | Лямбда-выражения | Анонимные функции | Урок #144
+#include <iostream>
+using namespace std;
+
+class MyClass
+{
+public:
+    int a = 11;
+
+    void Msg()
+    {
+        cout << "msg" << endl;
+    }
+
+    void Lambda()
+    {
+        auto f = [this]()   // this - захватывает сразу весь объект класса (даёт доступ ко всем полям класса)
+        {
+            this->Msg();
+        };
+        f();
+    }
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    auto f = []()->float    // синтаксис []()->float{} определяет жёстко тип ВОЗВРАЩАЕМОГО ЗНАЧЕНИЯ float
+    {
+        return 1.;
+    };
+
+    auto result = f();
+    cout << result << endl;
+
+    /*
+    MyClass m;
+    m.Lambda();
+    */
+    
+    // auto f = [a, b]()mutable {};
+
+    // auto f = [&a, b]()mutable {};
+
+    /*
+    auto f = [=]()mutable     // = вместе с mutable позволяют передавать все переменные по значению, то есть копии
+    {
+        cout << a << endl;
+        a = 1313;
+        cout << b << endl;
+        b = 11;
+    };
+    */
+
+    /*
+    auto f = [&]() // символ & означает, что мы передаем в lambda-функцию все переменные ПО ССЫЛКЕ
+    {
+        cout << a << endl;
+        a = 1313;
+        cout << b << endl;
+        b = 11;
+    };
+    */
+
+    /*
+    auto f = [=]() // символ = означает, что мы передаем в lambda-функцию все переменные ПО ЗНАЧЕНИЮ, НО только ДЛЯ ЧТЕНИЯ
+    {
+       cout << a << endl;
+       cout << b << endl;
+    };
+    */
+
+    /*
+    auto f = [&a, b]()
+    {
+        cout << a << endl;
+        a = 1313;
+        cout << b << endl;
+    };
+    */
+
+    /*
+    auto f = [a]()     // захват по параметру, ТОЛЬКО ДЛЯ ЧТЕНИЯ !!!
+    {
+        cout << a << endl;   
+    };
+
+    f();
+    */
+    return 0;
+}
+
+
+###### Как измерить время выполнения кода | Изучение С++ для начинающих. Урок #145
+#include <iostream>
+#include <thread>       // библиотека <chrono> подключается автоматически вместе с библиотекой <thread>
+using namespace std;
+
+class SimpleTimer
+{
+public:
+    SimpleTimer()
+    {
+        start = std::chrono::high_resolution_clock::now();
+    }
+    ~SimpleTimer()
+    {
+        end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> duration = end - start;
+        cout << "DURATION: " << duration.count() << "s" << endl;
+    }
+private:
+    std::chrono::time_point<std::chrono::steady_clock> start, end;
+};
+
+
+
+int Sum(int a, int b)
+{
+    SimpleTimer st;
+
+    this_thread::sleep_for(chrono::milliseconds(2000));
+
+    cout << "ID потока = " << this_thread::get_id() << " ========\tSum STARTED\t========" << endl;
+
+    this_thread::sleep_for(chrono::milliseconds(5000));
+
+    cout << "ID потока = " << this_thread::get_id() << " ========\tSum STOPPED\t========" << endl;
+
+    return a + b;
+}
+
+void Foo()
+{
+    SimpleTimer st;
+    for (size_t i = 0; i < 5000; i++)
+    {
+        cout << i << endl;
+    }
+}
+
+
+int main()
+{
+    Foo();
+    
+    
+    SimpleTimer st;
+    setlocale(LC_ALL, "ru");
+    int result;
+    thread t([&result]() { result = Sum(2, 5); });
+
+    for (size_t i = 0; i < 10; i++)
+    {
+        cout << "ID потока: " << std::this_thread::get_id() << "\tmain works\t" << i << endl;
+        std::this_thread::sleep_for(chrono::milliseconds(500));
+    }
+
+    t.join();
+
+    cout << "Sum result = " << result << endl;
+
+
+    /*
+    auto start = chrono::high_resolution_clock::now();
+    setlocale(LC_ALL, "ru");
+    int result;
+    thread t([&result]() { result = Sum(2, 5); });
+    for (size_t i = 0; i < 10; i++)
+    {
+        cout << "ID потока: " << std::this_thread::get_id() << "\tmain works\t" << i << endl;
+        std::this_thread::sleep_for(chrono::milliseconds(500));
+    }
+    t.join();
+    cout << "Sum result = " << result << endl;
+    auto end = chrono::high_resolution_clock::now();
+
+    chrono::duration<float> duration = end - start;
+    cout << "Duration: " << duration.count() << "s" << endl;
+    */
+    return 0;
+}
+
+
+###### Функторы в с++ | Что такое функтор | Изучение С++ для начинающих. Урок #146
+#include <iostream>
+using namespace std;
+
+class MyFunctor
+{
+public:
+    int operator ()(int a, int b)
+    {
+        cout << "Я функтор " << endl;
+        return a + b;
+        // cout << "Я функтор " << count << endl;
+        // ++count;
+    }
+    
+private:
+    // int count = 0;
+};
+
+class EvenFunctor
+{
+public:
+    void operator ()(int value) 
+    {
+        if (value % 2 == 0)
+        {
+            evenSum += value;
+            ++evenCount;
+        }
+    }
+
+    void ShowEvenSum()
+    {
+        cout << "Сумма чётных чисел: " << evenSum << endl;
+    }
+
+    void ShowEvenCount()
+    {
+        cout << "Количество чётных чисел: " << evenCount << endl;
+    }
+    
+private:
+    int evenSum = 0;
+    int evenCount = 0;
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    int arr[] = { 1,2,55,99,44,3,6 };
+    EvenFunctor ef;
+
+    for (auto element : arr)
+    {
+        cout << element << endl;
+        ef(element);
+    }
+
+    ef.ShowEvenCount();
+    ef.ShowEvenSum();
+
+    /*
+    MyFunctor f;
+    int result = f(2, 5);
+    cout << result << endl;
+    */
+
+    return 0;
+}
+
+
+###### Предикаты с++ | Что такое предикат | Изучение С++ для начинающих. Урок #147
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+class Person
+{
+public:
+    Person(string name, double score)
+    {
+        this->Name = name;
+        this->Score = score;
+    }
+
+    bool operator ()(const Person &p)
+    {
+        return p.Score > 180;
+    }
+
+    string Name;
+    double Score;
+};
+
+bool GreaterThanZero(int a)
+{
+    return a > 0;
+}
+
+bool LessThanZero(int a)
+{
+    return a < 0;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<Person> people
+    {
+        Person("Вася",181),
+        Person("Петя",30),
+        Person("Маша",179),
+        Person("Даша",200),
+        Person("Катя",198),
+        Person("Андрей",181),
+        Person("Сергей",50),
+        Person("Иван",150),
+        Person("Иван",190)
+    };
+
+    int result = count_if(people.begin(), people.end(), people.front());
+
+    cout << result << endl << endl;
+
+    for (auto el : people)
+    {
+        cout << Person("",0)(el) << endl;
+    }
+
+    /*
+    vector<int> v = { 1,-2,-55,9,-3,8,2 };
+
+    int result = count_if(v.begin(), v.end(), GreaterThanZero);
+    cout << result << endl;
+
+    result = count_if(v.begin(), v.end(), LessThanZero);
+    cout << result << endl;
+    */
+    return 0;
+}
+
+
+###### STL Алгоритмы сортировки | Бинарный предикат | Лямбда функции | C++ STL Уроки | #13
+
 
