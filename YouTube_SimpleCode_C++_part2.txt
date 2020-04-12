@@ -2702,5 +2702,152 @@ int main()
 
 
 ###### STL алгоритмы поиска | find | find_if | find_if_not | Библиотека стандартных шаблонов (stl) C++ #14
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Person
+{
+public:
+    Person(string name, double score)
+    {
+        this->Name = name;
+        this->Score = score;
+    }
+
+    bool operator ()(const Person &p)
+    {
+        return p.Score > 180;
+    }
+
+    string Name;
+    double Score;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<Person> people
+    {
+        Person("Вася",181),
+        Person("Петя",30),
+        Person("Маша",179),
+        Person("Даша",200),
+        Person("Катя",198),
+        Person("Андрей",181),
+        Person("Сергей",50),
+        Person("Иван",150),
+        Person("Иван",190),
+        Person("Петя",10)
+    };
+
+    vector<int> v = { 6,4,4,12,10,2,70 };
+
+    auto result = find_if(people.begin(), people.end(), [](const Person &p) { return p.Name == "Маша" && p.Score == 179; });
+    // auto result = find_if(people.begin(), people.end(), [](const Person &p) { return p.Name == "Маша" || p.Score > 100; });
+
+    if (result == people.end())
+    {
+        cout << "-" << endl;
+    }
+    else
+    {
+        cout << "+" << endl;
+    }
+
+    /*
+    vector<int> v = { 6,4,4,12,10,2,70 };
+
+    // auto result = find_if(v.begin(), v.end(), [](int a) { return a < 0; });  // find_if принимает унарный придикат
+
+    // auto result = find_if_not(v.begin(), v.end(), [](int a) { return a < 0; });   // инвертированный find_if
+
+    auto result = find(v.begin(), v.end(), 7);    // если элемента нет в коллекции, то функция find возвращает указатель на end()
+    
+    if (result == v.end())
+    {
+        cout << "-" << endl;
+    }
+    else
+    {
+        cout << "+" << endl;
+    }
+    */
+
+    return 0;
+}
+
+
+###### stl copy | stl copy_if | Выборка данных по условию | Библиотека стандартных шаблонов (stl) C++ #15
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Person
+{
+public:
+    Person(string name, double score, int age)
+    {
+        this->Name = name;
+        this->Score = score;
+        this->Age = age;
+    }
+
+    bool operator ()(const Person &p)
+    {
+        return p.Score > 180;
+    }
+
+    string Name;
+    double Score;
+    int Age;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<Person> people
+    {
+        Person("Вася",181,17),
+        Person("Петя",30,22),
+        Person("Маша",179,19),
+        Person("Даша",200,25),
+        Person("Катя",198,24),
+        Person("Андрей",181,23),
+        Person("Сергей",50,30),
+        Person("Денис",180,40),
+        Person("Иван",150,32),
+        Person("Иван",199,31),
+        Person("Петя",10,53)
+    };
+
+    vector<Person> result;   // коллекция, в которую мы будем копировать элементы коллекции
+
+    copy_if(people.begin(), people.end(), back_inserter(result), [](const Person& p) { return p.Age > 25; });
+
+    sort(result.begin(), result.end(), [](const Person& p1, const Person &p2) { return p1.Name < p2.Name; });
+    
+    cout << "Всего элементов:\t" << result.size() << endl;
+
+    for (auto element : result)
+    {
+        cout << "Имя:\t" << element.Name << "\tбаллы:\t" << element.Score << "\tВозраст:\t" << element.Age << endl;
+    }
+
+    // copy(people.begin(), people.end(), back_inserter(result));   // просто копирует элементы. Третьим параметром - функция back_inserter
+
+    return 0;
+}
+
+
+###### stl remove | stl remove_if | stl удаление элемента по условию | Библиотека (stl) #16
 
 
