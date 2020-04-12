@@ -3069,5 +3069,194 @@ int main()
 
 
 ###### С++ потоки и методы класса | С++ метод класса в потоке | Многопоточное программирование | C++ #5
+#include <iostream>
+#include <thread>
+using namespace std;
+
+class MyClass
+{
+public:
+    void DoWork()
+    {
+        this_thread::sleep_for(chrono::milliseconds(2000));
+
+        cout << "ID потока: " << this_thread::get_id() << " ==========\tDoWork STARTED \t==========" << endl;
+
+        this_thread::sleep_for(chrono::milliseconds(5000));
+
+        cout << "ID потока: " << this_thread::get_id() << " ==========\tDoWork STOPPED \t==========" << endl;
+    }
+
+    void DoWork2(int a)
+    {
+        this_thread::sleep_for(chrono::milliseconds(2000));
+
+        cout << "ID потока: " << this_thread::get_id() << " ==========\tDoWork2 STARTED \t==========" << endl;
+
+        this_thread::sleep_for(chrono::milliseconds(5000));
+
+        cout << "DoWork2 - Значение парамаетра\t" << a << endl;
+
+        cout << "ID потока: " << this_thread::get_id() << " ==========\tDoWork2 STOPPED \t==========" << endl;
+    }
+
+    int Sum(int a, int b)
+    {
+        this_thread::sleep_for(chrono::milliseconds(2000));
+
+        cout << "ID потока: " << this_thread::get_id() << " ==========\tSum STARTED \t==========" << endl;
+
+        this_thread::sleep_for(chrono::milliseconds(5000));
+
+        cout << "ID потока: " << this_thread::get_id() << " ==========\tSum STOPPED \t==========" << endl;
+
+        return a + b;
+    }
+};
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+    int result;
+    MyClass m;
+    
+    thread t([&]() { result = m.Sum(2, 5); });
+    // thread t([&m, &result]() { result = m.Sum(2, 5); });
+    
+    // thread t2([&]() { m.DoWork(); });
+
+    thread t2(&MyClass::DoWork, m);             // ссылка на метод класса и объект класса
+    
+    // thread t3([&]() { m.DoWork2(10); });
+
+    thread t3(&MyClass::DoWork2, m, 5);
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        cout << "ID потока: " << this_thread::get_id() << "\tmain works\t" << i << endl;
+        this_thread::sleep_for(chrono::milliseconds(500));
+    }
+
+    t.join();
+    t2.join();
+    t3.join();
+
+    cout << "RESULT\t" << result << endl;
+
+    return 0;
+}
+
+
+###### accumulate c++ | сумма и произведение элементов массива | Библиотека (stl) C++ #19
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <numeric>               // !!! для работы accumulate
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    int v[] = { 2,3,4,5,7,10 };
+    
+
+    auto result = accumulate(next(begin(v)), end(v), to_string(v[0]), [](string a, int b)   // ТОЧКА ОТСЧЁТА ещё и отвечает за тип данных в результате !!!
+        {   // next - сдвигает итератор на 1 шаг вправо
+            return a + "-" + to_string(b);
+        });
+
+    cout << "RESULT\t" << result << endl;
+
+    /*
+    vector<int> v = { 2,3,4,5,7,10 };
+
+    // auto result = accumulate(begin(v), end(v), 1, [](int a, int b) {  return a * b; });   // для умножения точку отсчёта нужно ставить 1
+
+    auto result = accumulate(begin(v), end(v), 0, [](int a, int b) 
+        {  
+            if (b % 2 == 0)   // a - текущий элемент, к нему прибавляем чётные числа
+            {
+                return a + b;
+            }
+            else
+            {
+                return a;
+            }
+        });
+
+    cout << "RESULT\t" << result << endl;
+    */
+
+    // auto result = accumulate(v.begin(), v.end(), 0);   // 3-й параметр - точка отсчёта
+    // auto result = accumulate(begin(v), end(v), 0);
+
+    // std::begin(v);  // == v.begin(). Эта функция применима не только к STL, но и к обычному массиву
+    // std::end(v);    // == v.end(). Эта функция применима не только к STL, но и к обычному массиву
+    return 0;
+}
+
+
+###### STL equal и mismatch | Сравнение массивов | Библиотека стандартных шаблонов (stl) C++ #20
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <string>
+using namespace std;
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<int> arr = { 11,3,4,5,7,10 };
+    vector<int> arr2 = { 11,3,4,5,7,10 };
+
+    auto result = mismatch(begin(arr), end(arr), begin(arr2), end(arr2));  // если равно, то вернёт пару end() обоих коллекций, иначе - пару отличных элементов
+
+    if (result.first==end(arr) && result.second==end(arr2))
+    {
+        cout << "+" << endl;
+    }
+    else
+    {
+        cout << "-" << endl;
+    }
+    
+
+    /*
+    vector<int> arr = { 11,3,4,5,7,10 };
+    vector<int> arr2 = { 10,3,4,5,7,11 };
+
+    sort(begin(arr), end(arr));
+    sort(begin(arr2), end(arr2));
+
+    auto result = equal(begin(arr), end(arr), begin(arr2), end(arr2));
+    cout << "RESULT\t" << result << endl;
+    */
+
+    /*
+    int arr[] = { 10,3,4,5,7,11 };
+    vector<int> arr2 = { 10,3,4,5,7,11 };
+    */
+
+    /*
+    int arr[] = { 10,3,4,5,7,11 };
+    int arr2[] = { 10,3,4,5,7,11,2 };
+
+    auto result = equal(begin(arr), end(arr), begin(arr2), end(arr2));
+
+    cout << "RESULT\t" << result << endl;
+    */
+    return 0;
+}
+
+
+###### Что такое mutex | Cинхронизация потоков | Многопоточное программирование | C++ #6
 
 
