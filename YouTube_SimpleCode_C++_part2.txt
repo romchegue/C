@@ -2849,5 +2849,225 @@ int main()
 
 
 ###### stl remove | stl remove_if | stl удаление элемента по условию | Библиотека (stl) #16
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Person
+{
+public:
+    Person(string name, double score, int age)
+    {
+        this->Name = name;
+        this->Score = score;
+        this->Age = age;
+    }
+
+    bool operator ()(const Person &p)
+    {
+        return p.Score > 180;
+    }
+
+    string Name;
+    double Score;
+    int Age;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    string str = "Текст с несколькими      пробелами";
+    std::cout << str << endl;
+    // str.erase(remove(str.begin(), str.end(), ' '), str.end());    // удалит все символы пробела - ' '
+    // cout << str << endl;
+
+    // Удаление ПОВТОРЯЮЩИХСЯ подряд ПРОБЕЛОВ:
+    char prev = '\0';   // временная переменная
+    str.erase(remove_if(str.begin(), str.end(), [&prev](char ch) {
+        if (prev == ' ' && ch == ' ')      // если предыдущий символ равен ' ' и этот равен ' ', то возращаем true - под удаление
+        { 
+            prev = ch;
+            return true;
+        }
+        prev = ch;
+        return false;
+        }), str.end());
+
+    std::cout << str << endl;
+
+    /*
+    vector<Person> people
+    {
+        Person("Вася",181,17),
+        Person("Петя",30,22),
+        Person("Маша",179,19),
+        Person("Даша",200,25),
+        Person("Катя",198,24),
+        Person("Андрей",181,23),
+        Person("Сергей",50,30),
+        Person("Денис",180,40),
+        Person("Иван",150,32),
+        Person("Иван",199,31),
+        Person("Петя",10,53)
+    };
+
+    for (auto element : people)
+    {
+        cout << "Имя:\t" << element.Name << "\tбаллы:\t" << element.Score << "\tВозраст:\t" << element.Age << endl;
+    }
+
+    // auto result = remove_if(people.begin(), people.end(), [](const Person& p) { return p.Score < 150; }); // итератор на границу нужных и ненужных объектов
+    // people.erase(result, people.end());
+    // people.erase(remove_if(people.begin(), people.end(), [](const Person& p) { return p.Score < 150 && p.Age > 25; }), people.end());
+    people.erase(remove_if(people.begin(), people.end(), [](const Person& p) { return p.Score < 150 || p.Age > 25; }), people.end());
+
+    cout << endl << endl;
+    for (auto element : people)
+    {
+        cout << "Имя:\t" << element.Name << "\tбаллы:\t" << element.Score << "\tВозраст:\t" << element.Age << endl;
+    }
+    */
+
+    /*
+    vector<int> v = { 5,9,1,46,4,9,4 };
+
+    for (auto element : v) { cout << element << endl; }
+    cout << endl << endl;
+    
+    auto result = remove(v.begin(), v.end(), 9);  // Эл-ты, указ. 3-им параметром, помещ-ся в конец. Возвр. ИТЕРАТОР на 1-й ненужный элем-т в конце
+    v.erase(result, v.end());   // удалить все элементы, начиная с result и до конца контейрнера
+    
+    for (auto element : v) { cout << element << endl; }
+    */
+
+    return 0;
+}
+
+
+###### Поиск максимального элемента | max_element c++ | Библиотека стандартных шаблонов (stl) C++ #17
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <string>
+using namespace std;
+
+class Person
+{
+public:
+    Person(string name, double score, int age)
+    {
+        this->Name = name;
+        this->Score = score;
+        this->Age = age;
+    }
+
+    bool operator ()(const Person &p)
+    {
+        return p.Score > 180;
+    }
+
+    string Name;
+    double Score;
+    int Age;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    const int SIZE = 6;
+    int arr[SIZE] = { 10,1,-55,11,13,59 };
+
+    auto result = max_element(arr, arr + SIZE);
+
+    cout << *result << endl;
+
+    /*
+    // vector<int> v = { 10,1,-55,11,13,58 };
+
+    list<int> lst = { 4,7,77,-3,44,74 };
+
+    auto result = max_element(lst.begin(), lst.end());
+    cout << *result << endl;
+    */
+    
+
+    /*
+    for (auto element : people)
+    {
+        cout << "Имя:\t" << element.Name << "\tбаллы:\t" << element.Score << "\tВозраст:\t" << element.Age << endl;
+    }
+    */
+
+    return 0;
+}
+
+
+###### Поиск минимального элемента | min_element c++ | Библиотека стандартных шаблонов (stl) C++ #18
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <string>
+using namespace std;
+
+class Person
+{
+public:
+    Person(string name, double score, int age)
+    {
+        this->Name = name;
+        this->Score = score;
+        this->Age = age;
+    }
+
+    bool operator ()(const Person &p)
+    {
+        return p.Score > 180;
+    }
+
+    string Name;
+    double Score;
+    int Age;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+
+    vector<int> v = { 10,1,-55,11,13,58 };
+
+    list<int> lst = { 4,7,77,-3,44,74 };
+
+    auto result = minmax_element(lst.begin(), lst.end());    // minmax_element - выводит пару указателей - на MIN и на MAX элементы коллекции
+
+    cout << *result.first << "\t" << *result.second << endl;
+
+    /*
+    // auto result = min_element(v.begin(), v.end());
+    auto result = min_element(lst.begin(), lst.end());
+
+    cout << *result << endl;
+    */
+
+    /*
+    const int SIZE = 6;
+    int arr[SIZE] = { 10,1,-55,11,13,59 };
+    auto result = min_element(arr, arr + SIZE);
+    cout << *result << endl;
+    */
+
+    return 0;
+}
+
+
+###### С++ потоки и методы класса | С++ метод класса в потоке | Многопоточное программирование | C++ #5
 
 
