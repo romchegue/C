@@ -3730,6 +3730,75 @@ int main()
 
 
 ###### unique_lock mutex | unique_lock vs lock_guard | Многопоточное программирование | C++ #10
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include "SimpleTimer.h"
+using namespace std;
+
+// unique_lock - более гибкий способ, чем lock_guard. У него есть различные методы.
+// Его можно вызывать в разных местах кода без активации. 
+// lock_guard удобен тогда, когда просто код до конца области видимости нужно выполнить синхронно
+// unique_lock даёт гибкость, когда нужно синхронизировать часть кода в одной области видимости
+
+mutex mtx;
+
+void Print(char ch)
+{
+    unique_lock<mutex> ul(mtx,std::defer_lock); // при таком создании объекта unique_lock mutex НЕ будет срауз вызван
+    
+    this_thread::sleep_for(chrono::milliseconds(2000));
+
+    ul.lock();   // сами вызываем синхронизацию
+    // unique_lock<mutex> ul(mtx); // при таком создании объекта unique_lock будет сразу вызван mutex 
+
+    for (size_t i = 0; i < 5; ++i)
+    {
+        for (size_t i = 0; i < 10; ++i)
+        {
+            cout << ch;
+            this_thread::sleep_for(chrono::milliseconds(10));
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+    ul.unlock();   // можем вызвать метод unlock(), где нам нужно. По умолчанию - в деструкторе
+
+    /*
+    {     // скобки для ограничения области видимости - костыли для lock_guard
+        lock_guard<mutex> lg(mtx);
+
+        for (size_t i = 0; i < 5; ++i)
+        {
+            for (size_t i = 0; i < 10; ++i)
+            {
+                cout << ch;
+                this_thread::sleep_for(chrono::milliseconds(10));
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+    */
+
+    this_thread::sleep_for(chrono::milliseconds(2000));
+}
 
 
+int main()
+{
+    SimpleTimer timer;
+    setlocale(LC_ALL, "ru");
+
+    thread t1(Print, '*');
+    thread t2(Print, '#');
+    t1.join();
+    t2.join();
+
+    return 0;
+}
+
+
+###### !!! ЭТО КОНЕЦ ПЛЕЙЛИСТА "Основы C++. Программирование для начинающих" НА КАНАЛЕ #SimpleCode ######
 
