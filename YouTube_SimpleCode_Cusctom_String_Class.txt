@@ -1,0 +1,343 @@
+###### YouTube #SimpleCode - (Стрим) Основы c++ для начинающих. Свой класс string. Стрим. #SimpleCode. Часть 1.
+###### https://youtu.be/Y3GGqqXlPQI
+#include <iostream>
+using namespace std;
+
+class MyString
+{
+public:
+	MyString()   // конструктор по умолчанию (не приниамет никаких параметров)
+	{
+		str = nullptr;
+	}
+
+	MyString(const char *str)
+	{
+		int length = strlen(str);
+		this->str = new char[length + 1];   // 1 ячейка - для терминирующего нуля '\0'
+
+		for (int i = 0; i < length; i++)
+		{
+			this->str[i] = str[i];
+		}
+
+		this->str[length] = '\0';
+	}
+
+	MyString(char* str)
+	{
+		int length = strlen(str);
+		this->str = new char[length + 1];   // 1 ячейка - для терминирующего нуля '\0'
+
+		for (int i = 0; i < length; i++)
+		{
+			this->str[i] = str[i];
+		}
+
+		this->str[length] = '\0';
+	}
+
+	~MyString()
+	{
+		delete[] this->str;       // освобождаем динамическую память
+	}
+
+	MyString(const MyString& other)    // констурктор копирования
+	{
+		int length = strlen(other.str);
+		this->str = new char[length + 1];   
+
+		for (int i = 0; i < length; i++)
+		{
+			this->str[i] = other.str[i];
+		}
+
+		this->str[length] = '\0';  
+	}
+
+	void Print()
+	{
+		cout << str;
+	}
+
+	MyString& operator = (const MyString &other)
+	{
+		if (this->str != nullptr)
+		{
+			delete[] this->str;
+		}
+
+		int length = strlen(other.str);
+		this->str = new char[length + 1];   // 1 ячейка - для терминирующего нуля '\0'
+
+		for (int i = 0; i < length; i++)
+		{
+			this->str[i] = other.str[i];
+		}
+
+		this->str[length] = '\0';
+
+		return *this;     // возвращаем разыменованный указатель на this, точбы вернуть ссылку на текущий объект нашего класса
+	}
+
+	/*
+	// Моя реализация перегрузки оператора +
+	MyString operator + (const MyString& other) // в результате сложения создаётся НОВЫЙ ОБЪЕКТ MyString
+	{
+		char* tempArr = new char[strlen(this->str) + strlen(other.str) + 1];     // создаём динамический массив char для объединения двух массивов str
+
+		int i = 0;
+		for (; i < strlen(this->str); ++i)  // в новый массив копируем элементы первого this->str
+		{
+			tempArr[i] = this->str[i];
+		}
+
+		for (int j = 0; j < strlen(other.str); j++, i++)  // в новый массив ДОБАВЛЯЕМ копированием элементы other.str
+		{
+			tempArr[i] = other.str[j];
+		}
+
+		tempArr[i] = '\0';   // для того, чтобы получилась СТРОКА, добавляем терминирующий ноль
+
+		return MyString(tempArr); // с помощью конструктора класса MyString возвращаей НОВЫЙ объект класса с новым массивом char в качестве параметра
+	}
+	*/
+
+	MyString operator + (const MyString& other)
+	{
+		MyString newStr;    // создаём новый объект класса MyString
+
+		newStr.str = new char[strlen(this->str) + strlen(other.str) + 1];
+
+		int i = 0;
+		for (; i < strlen(this->str); i++)
+		{
+			newStr.str[i] = this->str[i];
+		}
+
+		for (int j = 0; j < strlen(other.str); j++, i++)   // итерируемся именно при помощи j и i !!!
+		{
+			newStr.str[i] = other.str[j];
+		}
+
+		newStr.str[i] = '\0';
+
+		return newStr;   // нужно реализовать конструктор копирования !!!
+	}
+	
+private:
+	char* str;    // указатель. потому что нужно хранить массив char в динамической памяти
+};
+
+
+int main()
+{
+	MyString str("Hello");
+	MyString str2("World");
+
+	// str = str2;
+	// str.Print();
+
+	MyString result = str + str2;
+	
+	result.Print();
+	cout << endl;
+
+	return 0;
+}
+
+
+###### YouTube #SimpleCode - Основы c++ для начинающих. Свой класс string. Часть 2. Запись стрима. #SimpleCode
+###### https://youtu.be/FCOEp85Y3YU
+#include <iostream>
+using namespace std;
+
+class MyString
+{
+public:
+	MyString()   // конструктор по умолчанию (не приниамет никаких параметров)
+	{
+		str = nullptr;
+		this->length = 0;
+	}
+
+	MyString(const char *str)
+	{
+		length = strlen(str);    // strlen - выдаёт кол-во символов до терминирующего нуля НЕ включительно
+		this->str = new char[length + 1];   // 1 ячейка - для терминирующего нуля '\0'
+
+		for (int i = 0; i < length; i++)
+		{
+			this->str[i] = str[i];
+		}
+
+		this->str[length] = '\0';
+	}
+
+	~MyString()
+	{
+		delete[] this->str;       // освобождаем динамическую память
+	}
+
+	MyString(const MyString& other)    // констурктор копирования
+	{
+		length = strlen(other.str);
+		this->str = new char[length + 1];   
+
+		for (int i = 0; i < length; i++)
+		{
+			this->str[i] = other.str[i];
+		}
+
+		this->str[length] = '\0';
+	}
+
+	MyString(MyString &&other)    // констурктор перемещения. && - ссылка на ссылку на объект
+	{
+		this->length = other.length;    // присваиваем нашему полю lenngth значение поля length перемещаемого объекта
+		this->str = other.str;   // перемещаем наш указатель str на указатель str перемещаемого объекта
+		other.str = nullptr; // указав на nullptr указатель str перемещаемого объекта, мы запрещаем удалить оттуда данные в его деструкторе
+	}
+
+	void Print()
+	{
+		cout << str;
+	}
+
+	MyString& operator = (const MyString &other)
+	{
+		if (this->str != nullptr)
+		{
+			delete[] this->str;
+		}
+
+		length = strlen(other.str);
+		this->str = new char[length + 1];   // 1 ячейка - для терминирующего нуля '\0'
+
+		for (int i = 0; i < length; i++)
+		{
+			this->str[i] = other.str[i];
+		}
+
+		this->str[length] = '\0';
+		return *this;     // возвращаем разыменованный указатель на this, точбы вернуть ссылку на текущий объект нашего класса
+	}
+
+	/*
+	// Моя реализация перегрузки оператора +
+	MyString operator + (const MyString& other) // в результате сложения создаётся НОВЫЙ ОБЪЕКТ MyString
+	{
+		char* tempArr = new char[strlen(this->str) + strlen(other.str) + 1];     // создаём динамический массив char для объединения двух массивов str
+
+		int i = 0;
+		for (; i < strlen(this->str); ++i)  // в новый массив копируем элементы первого this->str
+		{
+			tempArr[i] = this->str[i];
+		}
+
+		for (int j = 0; j < strlen(other.str); j++, i++)  // в новый массив ДОБАВЛЯЕМ копированием элементы other.str
+		{
+			tempArr[i] = other.str[j];
+		}
+
+		tempArr[i] = '\0';   // для того, чтобы получилась СТРОКА, добавляем терминирующий ноль
+
+		return MyString(tempArr); // с помощью конструктора класса MyString возвращаей НОВЫЙ объект класса с новым массивом char в качестве параметра
+	}
+	*/
+
+	MyString operator + (const MyString& other)
+	{
+		MyString newStr;    // создаём новый объект класса MyString
+
+		newStr.length = strlen(this->str) + strlen(other.str);
+		newStr.str = new char[strlen(this->str) + strlen(other.str) + 1];
+
+		int i = 0;
+		for (; i < strlen(this->str); i++)
+		{
+			newStr.str[i] = this->str[i];
+		}
+
+		for (int j = 0; j < strlen(other.str); j++, i++)   // итерируемся именно при помощи j и i !!!
+		{
+			newStr.str[i] = other.str[j];
+		}
+
+		newStr.str[i] = '\0';
+
+		return newStr;   // нужно реализовать конструктор перемещения !!!
+	}
+	
+	bool operator == (const MyString& other)
+	{
+		if (this->length != other.length)
+		{
+			return false;
+		}
+        
+		for (int i = 0; i < this->length; ++i)
+		{
+			if (this->str[i] != other.str[i])
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool operator != (const MyString& other)
+	{
+		return !(this->operator==(other));   // инвертированный результат функции operator==()
+	}
+
+	char &operator [] (const int index)
+	{
+		return this->str[index];
+	}
+
+	int Length()
+	{
+		return length;
+	}
+
+private:
+	char* str;    // указатель. потому что нужно хранить массив char в динамической памяти
+	int length;
+};
+
+
+
+int main()
+{
+	MyString str("Hello");
+	MyString str2("World");
+
+	MyString result;
+
+	result = str + str2;
+
+	// cout << str;
+
+	/*
+	str.Print();
+	cout << endl << endl;
+	str[0] = 'Q';
+	str.Print();
+	cout << endl << endl;
+	cout << str[0] << endl;
+
+	MyString result;
+	
+	result = str + str2;    // Можно вставить пробел: result = str + MyString(" ") + str2;
+
+	cout << (str == str2) << endl;
+	cout << (str != str2) << endl;
+
+    cout << str.Length() << endl;
+    cout << str2.Length() << endl;
+    cout << result.Length() << endl;
+    */
+
+	return 0;
+}
