@@ -3,16 +3,22 @@
 
 int myStrlen(const char* str);
 
+////////////////////////////////////////////////////////////////////////////////////
 class MyString
 {
 public:
 	MyString();                   // a default construcor
 	MyString(const char *str);    // a constructor with parameters
 	MyString(MyString &&other);   // a move constructor
-	MyString(const MyString& other);    // a copy constructor
+	MyString(const MyString &other);    // a copy constructor
 	~MyString();                  // a destructor
-	MyString& operator= (const MyString &other);     // an operator =
-	MyString operator+ (const MyString &other);      // an operator +
+	MyString& operator=(const MyString &other);     // an operator =
+	MyString operator+(const MyString &other);      // an operator +
+	char& operator[](size_t index);                 // an operator []
+	bool operator==(const MyString &other);         // an operator ==
+	bool operator!=(const MyString &other);         // an operator !=
+	friend std::ostream& operator << (std::ostream &out, const MyString &str); // an operator <<
+	friend std::istream& operator >> (std::istream &in, MyString &str);        // an operator >>
 
 	void Print() { std::cout << this->str; }
 
@@ -111,9 +117,66 @@ MyString MyString::operator+(const MyString& other)     // an operator +
 	return newStr;
 }
 
+char& MyString::operator[](size_t index)
+{
+	return this->str[index];
+}
 
-int myStrlen(const char *str)     // There is my realisation of std::strlen function
-{   
+bool MyString::operator==(const MyString& other)
+{
+	if (this->length != other.length)
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i < length; ++i)
+	{
+		if (this->str[i] != other.str[i])
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool MyString::operator!=(const MyString& other)
+{
+	return !(*this==other);
+}
+
+std::ostream& operator<<(std::ostream& out, const MyString& str)     // an operator <<
+{
+	// for (size_t i = 0; i < str.length; i++) { os << str.str[i]; }   // the primitive implementation
+	out << str.str;
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, MyString& str)     // an operator >>
+{
+	size_t size = 250;     // Maximum length of a string
+	delete[] str.str;
+	
+	char* tempCharArray = new char[size];
+
+	in.getline(tempCharArray, size);
+	str.length = in.gcount() - 1;    
+	str.str = new char[str.length + 1];
+
+	for (size_t i = 0; i < str.length; i++)
+	{
+		str.str[i] = tempCharArray[i];
+	}
+	str.str[str.length] = '\0';
+
+	delete[] tempCharArray;
+	return in;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////
+int myStrlen(const char* str)     // There is my realisation of std::strlen function
+{
 	size_t i = 0;        // counter for the number of characters in the str array
 	char ch = str[i];
 
@@ -126,6 +189,8 @@ int myStrlen(const char *str)     // There is my realisation of std::strlen func
 	return i;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
 	MyString str1;
@@ -133,8 +198,19 @@ int main()
 	
 	str1 = MyString("Hello");
 
+	std::cout << str1 << "_smth" << std::endl;
+	std::cin >> str1;
+	std::cout << str1 << std::endl;
+
+
+	/*
 	MyString str3 = str1 + MyString(" ") +  str2;
 	str3.Print();
-
+	str3[2] = 'X';
+	std::cout << str3[0] << std::endl;
+	
+	std::cout << (str1==str2) << std::endl;
+	std::cout << (str1 != str2) << std::endl;
+	*/
 	return 0;
 }
