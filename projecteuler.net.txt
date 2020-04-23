@@ -582,4 +582,59 @@ int main()
     return 0;
 }
 
+ 
+//###### MY SIMPLE PROFILER
+
+// File MyTools.h
+#pragma once
+#include <iostream>
+#include <chrono>
+#include <fstream>
+
+// Function myProfiler takes 2 arguments: a function with type void and without argumets and a number of function calls
+void myProfiler(void(*func)(), const int COUNT = 10, const char* MESSAGE = "", const char *FILENAME = "TEST_RESULTS.txt");   // this is a simple profiler
+
+
+
+// File MyTools.cpp
+#include "MyTools.h"
+
+void myProfiler(void(*func)(), const int COUNT, const char *MESSAGE, const char *FILENAME)  
+{
+    std::ofstream fout;     // write to file:
+    fout.open(FILENAME, std::ios_base::app);
+    
+    std::chrono::time_point<std::chrono::steady_clock> start, end;
+    std::chrono::duration<float> sumDuration;
+
+    start = std::chrono::high_resolution_clock::now();
+    end = std::chrono::high_resolution_clock::now();
+    sumDuration = end - start;
+
+    for (size_t i = 0; i < COUNT; ++i)
+    {
+        start = std::chrono::high_resolution_clock::now();
+        func();
+        end = std::chrono::high_resolution_clock::now();
+
+        sumDuration += end - start;
+    }
+
+    std::cout << std::endl << std::endl;
+    if (MESSAGE != "") 
+    { 
+        std::cout << MESSAGE << std::endl; 
+        fout << MESSAGE << std::endl;
+    }
+    std::cout << "Total code execution time " << COUNT << " times:\t" << sumDuration.count() << "s" << std::endl << std::endl;
+    fout << "Total code execution time " << COUNT << " times:\t" << sumDuration.count() << "s" << std::endl << std::endl;
+
+    fout.close();
+
+    system("pause");
+}
+
+
+
+
 
