@@ -635,6 +635,287 @@ void myProfiler(void(*func)(), const int COUNT, const char *MESSAGE, const char 
 }
 
 
+//###### Problem 6 - Sum square difference
+// The sum of the squares of the first ten natural numbers is,
+//     pow(1,2) + pow(2,2) + ... + pow(10,2) = 385
+// The square of the sum of the first ten natural numbers is,
+//     pow((1 + 2 + ... + 10), 2) = pow(55, 2) = 3025
+// Hence the difference between the sum of the squares of the 
+// first ten natural numbers and the square of the sum is 3025−385 = 2640.
+// Find the difference between the sum of the squares of the first 
+// one hundred natural numbers and the square of the sum.
 
+#include <iostream>
+#include <cmath>
+#include "MyTools.h"
+
+
+void TEST()
+{
+    int MAX = 100;
+    
+    __int64 sum = 0;
+    __int64 sum_sq = 0;
+    __int64 result;
+
+    for (size_t i = 1; i <= MAX; ++i)
+    {
+        sum_sq += i * i;
+        sum += i;
+    }
+    
+    std::cout << sum * sum - sum_sq << std::endl;
+}
+
+int main()
+{
+    // myProfiler(TEST, 1000000, "Problem 6 - Sum square difference. [Simple version]");
+    TEST();
+    
+    const int MAX = 100;
+
+    __int64 sum = 0;
+    __int64 sum_sq = 0;
+    __int64 result;
+
+    for (size_t i = 1; i <= MAX; ++i)
+    {
+        sum_sq += i * i;
+        sum += i;
+    }
+
+    std::cout << sum * sum - sum_sq << std::endl;
+    
+
+    return 0;
+}
+
+
+##### Problem 6 - Sum square difference
+// The sum of the squares of the first ten natural numbers is,
+//     pow(1,2) + pow(2,2) + ... + pow(10,2) = 385
+// The square of the sum of the first ten natural numbers is,
+//     pow((1 + 2 + ... + 10), 2) = pow(55, 2) = 3025
+// Hence the difference between the sum of the squares of the 
+// first ten natural numbers and the square of the sum is 3025−385 = 2640.
+// Find the difference between the sum of the squares of the first 
+// one hundred natural numbers and the square of the sum.
+
+#include <iostream>
+#include <cmath>
+#include "MyTools.h"
+
+
+void TEST()
+{
+    int MAX = 100;
+    
+    __int64 sum = 0;
+    __int64 sum_sq = 0;
+    __int64 result;
+
+    sum = (MAX * MAX + MAX) / 2;
+    
+    sum_sq = MAX * (MAX + 1) * (2 * MAX + 1) / 6;
+
+    result = sum * sum - sum_sq;
+    // std::cout << sum * sum - sum_sq << std::endl;
+}
+
+int main()
+{
+    myProfiler(TEST, 1000000, "Problem 6 - Sum square difference. [sum and sum_sq formulas. 10000]");
+    // TEST();
+    
+    int MAX = 100;
+
+    __int64 sum = 0;
+    __int64 sum_sq = 0;
+    __int64 result;
+
+    sum = (MAX * MAX + MAX) / 2;
+
+    sum_sq = MAX * (MAX + 1) * (2 * MAX + 1) / 6;
+
+    result = sum * sum - sum_sq;
+    std::cout << sum * sum - sum_sq << std::endl;
+        
+    return 0;
+}
+
+
+//###### Problem 7 - 10001st prime
+// By listing the first six prime numbers: 
+// 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
+// What is the 10 001st prime number ?
+
+#include <iostream>
+#include <cmath>
+#include "MyTools.h"
+
+bool isPrime(__int64 num)
+{
+    int MAX = (int)sqrt(num) + 1;
+    for (int i = 2; i < MAX; i++)
+    {
+        if (num % i == 0)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+void TEST()
+{
+    int counter = 3;    // prime numbers: 2,3,5
+    const int limit = 10001;
+    __int64 i = 0;
+    __int64 lastPrime = 5;
+    const int SIZE = 2;
+    __int64 arr[SIZE];
+
+    while (counter < limit)
+    {
+        ++i;
+ 
+        arr[0] = 6 * i + 1;
+        arr[1] = 6 * i + 5;
+        
+        for (int element : arr)
+        {
+            if (isPrime(element))
+            {
+                ++counter;
+                lastPrime = element;
+            }
+            if (counter >= limit)
+            {
+                break;
+            }
+        }
+        
+    }
+    
+    // std::cout << lastPrime << std::endl;
+}
+
+int main()
+{
+    myProfiler(TEST, 1000, "Problem 7 - 10001st prime. [Version with 6k+1, 6k+5. 10001th]");
+    // TEST();
+        
+    return 0;
+}
+
+
+//###### Problem 7 - 10001st prime
+// By listing the first six prime numbers: 
+// 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
+// What is the 10 001st prime number ?
+
+#include <iostream>
+#include <cmath>
+#include "MyTools.h"
+
+bool isPrime(__int64 num)
+{
+    int MAX = (int)sqrt(num) + 1;
+    for (int i = 2; i < MAX; i++)
+    {
+        if (num % i == 0)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+__int64 primeOrder(const int N)
+{   // determines approximate size of N-th integer
+    // info: https://primes.utm.edu/howmany.html#better 
+    
+    __int64 pN;
+
+    if (N <= 0)
+    {
+        return 0;
+    }
+
+    if (N < 13)
+    {
+        pN = 38;     // 12th prime number is 37
+        return pN;
+    }
+
+    if (N >= 13 && N < 8601)                      // p(N) ~ N * (ln(N) + ln(ln(N)) - 1)
+    {
+        pN = N * (log(N) + log(log(N)) - 1);
+        return pN;
+    }
+
+    if (N >= 8601 && N < 15985)   // N * (ln(N) + ln(ln(N)) - 1.0073) < p(N) < N * (ln(N) + ln(ln(N)) - 0.9385)
+    {
+        pN = N * (log(N) + log(log(N)) - 0.9385);   // upoper bound of the division
+        return pN;
+    }
+
+    if (N >= 15985)   // p(N) <= N * (ln(N) + ln(ln(N)) - 0.9427)
+    {
+        pN = N * (log(N) + log(log(N)) - 0.9385);   // upper bound of the division
+        return pN;
+    }
+}
+
+void Eratosthen(bool *arr, const int limit)     
+{   // Algorithm - Sieve of Eratosthenes
+    // https://younglinux.info/algorithm/sieve
+    arr[0] = arr[1] = false;
+
+    for (int i = 2; i * i < limit; ++i)
+    {
+        if (arr[i])
+        {
+            for (int j = i * i; j < limit; j += i)
+            {
+                arr[j] = false;
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    int N = 10001;
+    int limit = primeOrder(N);
+    bool* arr = new bool[limit + 1];
+    int counter = 0;
+    int result = 0;
+
+    for (int i = 0; i <= limit; ++i) { arr[i] = true; }  
+
+    Eratosthen(arr, limit);
+
+    for (int i = 2; i <= limit; ++i)
+    {
+        if (arr[i])
+        {
+            ++counter;
+        }
+        if (counter == N)
+        {
+            result += i;
+            break;
+        }
+    }
+    std::cout << result << std::endl;
+
+    delete[] arr;
+    return 0;
+}
 
 
