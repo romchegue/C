@@ -919,3 +919,60 @@ int main()
 }
 
 
+//###### Problem 7 - 10001st prime - THE ANSWER
+// By listing the first six prime numbers: 
+// 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
+// What is the 10 001st prime number ?
+
+#include <iostream>
+#include <cmath>
+#include "MyTools.h"
+
+bool isPrimeNew(__int64 n)
+{
+    if (n <= 1) { return false; }            // numbers <= 1 are not prime
+    else if (n < 4) { return true; }        // 2 and 3 are prime
+    else if (n % 2 == 0) { return false; }   // even numbers are not prime
+    else if (n < 9) { return true; }        // we have alraedy excluded 4, 6 and 8
+    else if (n % 3 == 0) { return false; }
+    else
+    {
+        int r = floor(sqrt(n));    // r is rounded to the greatest integer r so that r*r<=n
+        int f = 5;    // 6k - 1, k = 1
+
+        while (f <= r) 
+        {
+            if (n % f == 0)         // f = 6k - 1
+            {
+                return false;
+            }
+            if (n % (f + 2) == 0)   // f + 2 == 6k + 1
+            {
+                return false;
+            }
+            f += 6;     // ++k
+        }
+        return true;        // in all other cases
+    }
+}
+
+
+int main()
+{
+    int limit =10001;
+    int count = 1;       // we know that 2 is prime
+    int candidate = 1;
+    
+    while(count < limit)
+    {
+        candidate += 2;
+        if (isPrimeNew(candidate))
+        {
+            count++;
+        }
+    }
+    
+    std::cout << candidate << std::endl;
+
+    return 0;
+}
