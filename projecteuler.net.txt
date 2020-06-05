@@ -1305,3 +1305,77 @@ int main()
 
     return 0;
 }
+
+
+//###### Problem 10 - Summation of primes
+// The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
+// Find the sum of all the primes below two million.
+
+#include <iostream>
+#include <cmath>
+#include "MyTools.h"
+
+void Eratosphen(bool *isPrime, const long long int N)
+{
+    for (long long int i = 0; i < N + 1; ++i)
+    {
+        isPrime[i] = true;
+    }
+    
+    isPrime[0] = false;
+    isPrime[1] = false;
+
+    for (int i = 4; i <= N; i += 2)     // Exclude all the even numbers
+    {
+        isPrime[i] = false;
+    }
+
+    for (long long int i = 3; i*i <= N; i += 2)    // The step equals 2
+    {
+        if (isPrime[i])
+        {
+            for (long long int j = i*i; j <= N; j += i)
+            {
+                isPrime[j] = false;
+            }
+        }
+    }
+
+
+}
+
+
+void TEST()
+{
+    long long int N = 2000000;
+    bool *arr = new bool [N+1];
+    Eratosphen(arr, N);
+    long long int sum = 0;
+    /*
+    //////////////////////////////////////////
+    for (int i = 0; i <= N; ++i)
+    {
+        std::cout << arr[i] << " "; 
+    }
+    std::cout << "\n\n";
+    //////////////////////////////////////////
+    */
+    for (long long int i = 0; i <= N; ++i)
+    {
+        if (arr[i])
+        {
+            sum += i;
+        }
+    }
+    //std::cout << "The sum of primes up to " << N << " equals:\n" << sum << "\n";
+}
+
+int main()
+{
+    myProfiler(TEST, 1, "Problem 10 - Summation of primes. [My version #1]");
+    //TEST();
+
+    return 0;
+}
+
+
