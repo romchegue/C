@@ -1334,7 +1334,7 @@ void Eratosphen(bool *isPrime, const long long int N)
     {
         if (isPrime[i])
         {
-            for (long long int j = i*i; j <= N; j += i)
+            for (long long int j = i*i; j <= N; j += (2 * i))    // step = 2 * i
             {
                 isPrime[j] = false;
             }
