@@ -186,7 +186,7 @@ int main()
 
 //###### Problem 4 (NOT GOOD) - Largest palindrome product
 // A palindromic number reads the same both ways. 
-// The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
+// The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 Г— 99.
 // Find the largest palindrome made from the product of two 3-digit numbers.
 
 #include <iostream>
@@ -259,7 +259,7 @@ int main()
 
 //###### Problem 4 - Largest palindrome product
 // A palindromic number reads the same both ways. 
-// The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
+// The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 Г— 99.
 // Find the largest palindrome made from the product of two 3-digit numbers.
 
 #include <iostream>
@@ -641,7 +641,7 @@ void myProfiler(void(*func)(), const int COUNT, const char *MESSAGE, const char 
 // The square of the sum of the first ten natural numbers is,
 //     pow((1 + 2 + ... + 10), 2) = pow(55, 2) = 3025
 // Hence the difference between the sum of the squares of the 
-// first ten natural numbers and the square of the sum is 3025−385 = 2640.
+// first ten natural numbers and the square of the sum is 3025в€’385 = 2640.
 // Find the difference between the sum of the squares of the first 
 // one hundred natural numbers and the square of the sum.
 
@@ -697,7 +697,7 @@ int main()
 // The square of the sum of the first ten natural numbers is,
 //     pow((1 + 2 + ... + 10), 2) = pow(55, 2) = 3025
 // Hence the difference between the sum of the squares of the 
-// first ten natural numbers and the square of the sum is 3025−385 = 2640.
+// first ten natural numbers and the square of the sum is 3025в€’385 = 2640.
 // Find the difference between the sum of the squares of the first 
 // one hundred natural numbers and the square of the sum.
 
@@ -980,7 +980,7 @@ int main()
 
 //###### Problem 8 - Largest product in a series
 // The four adjacent digits in the 1000-digit number that 
-// have the greatest product are 9 × 9 × 8 × 9 = 5832.
+// have the greatest product are 9 Г— 9 Г— 8 Г— 9 = 5832.
 /*
 73167176531330624919225119674426574742355349194934
 96983520312774506326239578318016984801869478851843
@@ -1515,56 +1515,243 @@ What is the greatest product of four adjacent numbers in the same direction(up, 
 #include "MyTools.h"
 using namespace std;
 
-void printArray2D(int **arr, const int rows, const int cols, const int W = 2)
-{
-    cout.fill('0');
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            cout.width(W);
-            cout << arr[i][j] << " ";
-        }
-        cout << "\n";
-    }
+void fillArray2D(int** arr, const int rows, const int cols, const char filePath[])
+{   // Filling in a Two-dimensional (2D) array
+	// Create an object of class ifstream and 
+	// immediately specify the file from which we will read:
+	ifstream f(filePath);
+
+	// Read the file and remember what we read in the array
+	for (int i = 0; i < rows; ++i)
+	{
+		for (int j = 0; j < cols; ++j)
+		{
+			f >> arr[i][j];
+		}
+	}
 }
 
-void fillArray2D(int **arr, const int rows, const int cols, const char filePath[])
-{   // Filling in a Two-dimensional (2D) array
-    // Create an object of class ifstream and 
-    // immediately specify the file from which we will read:
-    ifstream f(filePath);
+void printArray2D(int** arr, const int rows, const int cols, const int W = 2)
+{
+	std::cout.fill('0');
 
-    // Read the file and remember what we read in the array
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            f >> arr[i][j];
-        }
-    }
+	std::cout << "     ";
+	for (int j = 0; j < cols; ++j)
+	{
+		std::cout.width(W);
+		std::cout << j << " ";
+	}
+	std::cout << "\n" << endl;
+
+	for (int i = 0; i < rows; ++i)
+	{
+		std::cout.width(W);
+		std::cout << i << "   ";
+		for (int j = 0; j < cols; ++j)
+		{
+			std::cout.width(W);
+			std::cout << arr[i][j] << " ";
+		}
+		std::cout << "\n";
+	}
+}
+
+int maxProdInRows(int** array, const int rows, const int cols, const int blockLength, int maxProd)
+{
+	int prod;        // temporary production
+
+	for (int i = 0; i < rows; ++i)
+	{
+		for (int j = 0; j <= (cols - blockLength); ++j)
+		{
+			prod = 1;
+			for (int k = j; k < (j + blockLength); ++k)
+			{
+				if (array[i][k] == 0)
+				{
+					break;
+				}
+				else
+				{
+					prod *= array[i][k];
+				}
+			}
+
+			if (prod > maxProd)
+			{
+				maxProd = prod;
+				/*
+				std::cout << "Prod = " << prod << "\t string: " << i << "\tnumders: ";
+				for (int m = j; m < (j + blockLength); ++m)
+				{
+					std::cout << array[i][m] << " ";
+				}
+				std::cout << endl;
+				*/
+			}
+		}
+	}
+
+	return maxProd;
+}
+
+int maxProdInCols(int** array, const int rows, const int cols, const int blockLength, int maxProd)
+{
+	int prod;        // temporary production
+
+	for (int i = 0; i < cols; ++i)
+	{
+		for (int j = 0; j <= (rows - blockLength); ++j)
+		{
+			prod = 1;
+			for (int k = j; k < (j + blockLength); ++k)
+			{
+				if (array[k][i] == 0)
+				{
+					break;
+				}
+				else
+				{
+					prod *= array[k][i];
+				}
+			}
+
+			if (prod > maxProd)
+			{
+				maxProd = prod;
+				/*
+				std::cout << "Prod = " << prod << "\t column: " << i << "\tnumders: ";
+				for (int m = j; m < (j + blockLength); ++m)
+				{
+					std::cout << array[m][i] << " ";
+				}
+				std::cout << endl;
+				*/
+			}
+		}
+	}
+
+	return maxProd;
+}
+
+int maxProdInDiagULDR(int** array, const int rows, const int cols, const int blockLength, int maxProd)
+{
+	int prod;        // temporary production
+
+	for (int i = 0; i <= (rows - blockLength); ++i)
+	{
+		for (int j = 0; j <= (cols - blockLength); ++j)
+		{
+			prod = 1;
+			for (int k = 0; k < blockLength; ++k)
+			{
+				if (array[i + k][j + k] == 0)
+				{
+					prod = 1;     // reset to the default value
+					break;
+				}
+				else
+				{
+					prod *= array[i + k][j + k];
+				}
+			}
+
+			if (prod > maxProd)
+			{
+				maxProd = prod;
+				/*
+				cout << "Prod = " << prod << "\t diagonal ULDR: (" << i << "," << j << ")\tnumders: ";
+				for (int m = 0; m < blockLength; ++m)
+				{
+					cout << array[i + m][j + m] << " ";
+				}
+				cout << endl;
+				*/
+			}
+		}
+	}
+
+	return maxProd;
+}
+
+int maxProdInDiagURDL(int** array, const int rows, const int cols, const int blockLength, int maxProd)
+{
+	int prod;        // temporary production
+	int element;
+
+	for (int i = 0; i <= (rows - blockLength); ++i)
+	{
+		for (int j = (blockLength - 1); j < cols; ++j)
+		{
+			prod = 1;
+			for (int k = 0; k < blockLength; ++k)
+			{
+				element = array[i + k][j - k];
+				if (element == 0)
+				{
+					prod = 1;     // reset to the default value
+					break;
+				}
+				else
+				{
+					prod *= element;
+				}
+			}
+
+			if (prod > maxProd)
+			{
+				maxProd = prod;
+				/*
+				std::cout << "Prod = " << prod << "\t diagonal URDL: (" << i << "," << j << ")\tnumders: ";
+				for (int m = 0; m < blockLength; ++m)
+				{
+					std::cout << array[i + m][j - m] << " ";
+				}
+				std::cout << endl;
+				*/
+			}
+		}
+	}
+
+	return maxProd;
 }
 
 void TEST()
 {
-    int row = 20;
-    int column = 20;
-    int** array = new int* [row];
+	int row = 20;
+	int column = 20;
+	int blockLength = 4;a
+	int result = 0;
 
-    // Two-dimensional (2D) array  initialization
-    for (int i = 0; i < row; ++i)
-    {
-        array[i] = new int[column];
-    }
+	int** array = new int* [row];
+
+	// Two-dimensional (2D) array  initialization
+	for (int i = 0; i < row; ++i)
+	{
+		array[i] = new int[column];
+	}
 
     fillArray2D(array, row, column, "array.txt");
+	
+	// std::cout << endl;
+	// printArray2D(array, row, column, 2);
+	// std::cout << endl;
+	
+	// std::cout << "#### IN ROWS: ####" << endl;
+	result = maxProdInRows(array, row, column, blockLength, result);
+	// std::cout << "#### IN COLUMNS: ####" << endl;
+	result = maxProdInCols(array, row, column, blockLength, result);
+	// std::cout << "#### IN DIAGONAL ULDR: ####" << endl;
+	result = maxProdInDiagULDR(array, row, column, blockLength, result);
+	// std::cout << "#### IN DIAGONAL URDL: ####" << endl;
+	result = maxProdInDiagURDL(array, row, column, blockLength, result);
 
-    printArray2D(array, row, column, 2);
+	std::cout << endl << result << endl;
 }
 
 int main()
-{   
-    TEST();
-
-    return 0;
+{
+	myProfiler(TEST, 1, "Problem 11 - Largest product in a grid [My version #1]");
+	// TEST();
+	return 0;
 }
