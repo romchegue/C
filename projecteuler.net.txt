@@ -2501,3 +2501,86 @@ int main()
 
     return 0;
 }
+
+
+
+/*
+###### Problem 13 - Large sum ###### ANSWER --> https://euler.stephan-brumme.com/13/
+Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
+37107287533902102798797998220837590246510135740250
+46376937677490009712648124896970078050417018260538
+...
+20849603980134001723930671666823555245252804609722
+72107838435069186155435662884062257473692284509516
+*/
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include "MyTools.h"
+
+void TEST()
+{
+    // --> https://euler.stephan-brumme.com/13/
+    // store each digit separately
+    // input has 50 digits
+    // highest digits might overflow and require a few extra digits
+    // (I believe +2 would suffice, too)
+    const int MinDigits = 50 + 10;
+    // all digits are initially zero, least significant has index 0
+    std::vector<int> sum(MinDigits, 0);
+    // the resulting number will be sum[0] + 10*sum[1] + 100*sum[2] + ...
+
+    int numbers = 100;        // a number of numbers which we are added
+
+#define ORIGINAL
+#ifndef ORIGINAL                  // if NOT ORIGINAL then input number of numbers from STDIN
+    std::cin >> numbers;
+#endif
+
+    while (numbers--)
+    {
+        // read a single number as a string
+        std::string strAdd;
+        std::cin >> strAdd;
+
+        // convert to digits
+        std::vector<int> add;
+        // process string in reverse: least significant digits first
+        for (auto i = strAdd.rbegin(); i != strAdd.rend(); i++)
+            add.push_back(*i - '0'); // convert from ASCII
+        // fill high/unused positions with zeros
+        add.resize(sum.size(), 0);
+
+        // add all digits
+        for (int i = 0; i < add.size(); i++)
+        {
+            sum[i] += add[i];
+
+            // overflow ? => sum[i] is 10 .. 18
+            if (sum[i] >= 10)
+            {
+                sum[i + 1]++; // sum[i + 1] = sum[i] % 10
+                sum[i] -= 10; // sum[i]    %= 10
+            }
+        }
+    }
+
+    // skip high zeros
+    auto i = sum.rbegin();             // i - reverse_iterator
+    while (*i == 0)
+        i++;
+
+    // print first ten digits
+    int numDigits = 10;
+    while (numDigits-- > 0)
+        std::cout << *i++;
+
+}
+
+int main()
+{
+    myProfiler(TEST, 1, "Problem 13 - Large sum [Version - #1]");
+
+    return 0;
+}
