@@ -2777,3 +2777,122 @@ int main()
     return 0;
 }
 
+
+
+/*
+###### Problem 15 - Lattice paths
+Starting in the top left corner of a 2×2 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
+How many such routes are there through a 20×20 grid?
+*/
+
+#include <iostream>
+#include "MyTools.h"
+#include <map>
+using namespace std;
+// ##########################################################################################
+// My good version. This version is almost the same as ProjectEuler solution - version 4 
+// Info Wikipedia: https://en.wikipedia.org/wiki/Lattice_path
+/*
+long long factorial(int a)
+{
+    if (a == 0) { return 1; }
+    else { return a * factorial(a - 1); }
+}
+*/
+
+long long binomial_my_version(int n, int k)    // https://en.wikipedia.org/wiki/Binomial_coefficient
+{
+    long double res = 1;
+
+    for (int i = 1; i <= k; ++i)
+    {
+        res *= (long double)(n + 1 - i) / i;     // Multiplicative formula for binomial coefficient
+    }
+
+    return (long long)res;
+}
+
+void TEST_my_version() 
+{
+    int x = 20, y = 20;
+    int N;
+    int K;
+    
+    // https://en.wikipedia.org/wiki/Lattice_path
+    // The number of lattice paths from (0,0) to (p,q) is equal to the binomial coefficient ((p + q) | p).
+       
+    cout << binomial_my_version((x + y), x) << endl;
+}
+
+// ##########################################################################################
+// ProjectEuler solution - version 2. Info: https://en.wikipedia.org/wiki/Lattice_path
+// We have to declare a cache map variable in the global area
+map <pair<int, int>, long long> cache;                // ProjectEuler solution - version 2
+
+// This function depends on the map storage (cache)
+long long  func_ProjectEuler_v2(int m, int n)         // ProjectEuler solution - version 2
+{
+    if (n == 0 || m == 0) { return 1; }
+
+    pair<int, int> p(m, n);
+
+    if (cache[p]) { return cache[p]; }
+
+    cache[p] = func_ProjectEuler_v2(m, n - 1) + func_ProjectEuler_v2(m - 1, n);
+    return cache[p];
+}
+
+void TEST_ProjectEuler_v2()                             // ProjectEuler solution - version 2
+{  
+    int M = 20, N = 20;
+    cout << func_ProjectEuler_v2(M, N) << endl;
+}
+
+// ##########################################################################################
+// ProjectEuler solution - version 3. Info: https://en.wikipedia.org/wiki/Lattice_path
+
+long long func_ProjectEuler_v3(int m, int n)            // ProjectEuler solution - version 3
+{
+    long long res;
+    long long **grid = new long long *[m + 1];
+    // Array initiation
+    for (int i = 0; i < m + 1; ++i) { grid[i] = new long long[n + 1]; }
+
+    for (int i = 0; i <= m; ++i) { grid[i][0] = 1; }
+
+    for (int j = 0; j <= n; ++j) { grid[0][j] = 1; }
+
+    for (int i = 1; i <= m; ++i)
+    {
+        for (int j = 1; j <= n; ++j)
+        {
+            grid[i][j] = grid[i - 1][j] + grid[i][j - 1];
+        }
+    }
+
+    res = grid[m][n];
+
+    // Clear dynamic memory
+    for (int i = 0; i < m + 1; ++i) { delete[] grid[i]; }
+    delete[] grid;
+
+    return res;
+}
+
+void TEST_ProjectEuler_v3()                             // ProjectEuler solution - version 3
+{
+    int M = 20, N = 20;
+    cout << func_ProjectEuler_v3(M, N) << endl;
+}
+
+// ##########################################################################################
+
+int main()
+{
+    // TEST();
+    myProfiler(TEST_ProjectEuler_v3, 1, "Problem 15 - Lattice paths [Version #2 - ProjectEuler version 2]");
+    return 0;
+}
+
+
+
